@@ -1,0 +1,14 @@
+{
+	"appname": "guide-generator",
+	"scope": "BuyerAdmin BuyerReader FullAccess",
+	"clientid": "E2CBAC55-B1A5-4F78-B260-7BC01D9D4EEE",
+	"buyerid": null,
+	"environment": "prod",
+	"anonymous": false,
+	"base": {
+		"left": true,
+		"right": false,
+		"top": true,
+		"bottom": false
+	}
+}
