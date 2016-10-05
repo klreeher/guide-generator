@@ -1,6 +1,6 @@
 {
 	"appname": "guide-generator",
-	"scope": "BuyerAdmin BuyerReader FullAccess",
+	"scope": "BuyerAdmin BuyerReader FullAccess DevCenterImpersonate",
 	"clientid": "E2CBAC55-B1A5-4F78-B260-7BC01D9D4EEE",
 	"buyerid": null,
 	"environment": "prod",
