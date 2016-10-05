@@ -36,6 +36,11 @@ module.exports = {
         '!' + source + '**/*.spec.js',
         '!' + source + '**/*.test.js'
     ],
+    secondaryBowerScripts: [
+        bowerFiles + 'prism/components/prism-swift.js',
+        bowerFiles + 'prism/components/prism-ruby.js',
+        bowerFiles + 'prism/components/prism-http.js'
+    ],
     components: {
         dir: components,
         scripts: [
@@ -56,8 +61,8 @@ module.exports = {
         source + '**/*.css'
     ],
     wrapper: {
-        header: '(function() {\n"use strict";\n',
-        footer: '}());'
+        header: '(function (window, document, undefined) {',
+        footer: '})(window, document);'
     },
     templateCacheSettings: {
         standalone: false,
