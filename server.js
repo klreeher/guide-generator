@@ -43,7 +43,7 @@ app.get('/api/googledocs/:docID/:token', function(req, res) {
             var $ = cheerio.load(html);
 
             //variables for holding data
-            var title, titleIndex;
+            var title, tag;
             var paragraphs = [];
             var code = [];
             var json = []
@@ -53,9 +53,10 @@ app.get('/api/googledocs/:docID/:token', function(req, res) {
                 var next = $(element[index + 1])
                 var length = json.length;
 
-                if (data.is('h2') && data.text()) {
+                if (data.is('h1') || data.is('h2')|| data.is('h3') || data.is('h4') ||data.is('h5') && data.text()) {
                     json.push({
                         title: data.text(),
+                        tag: data.text().replace(/[^0-9a-zA-Z]/g, ''),
                         paragraphs: [{
                             code:[]
                         }]
