@@ -95,7 +95,7 @@ app.get('/api/googledocs/:docID/:token', function(req, res) {
                 console.log('File successfully written! - Check your project directory for the output.json file');
             })
             // Finally, we'll just send out a message to the browser reminding you that this app does not have a UI.
-        res.send('Check your console!')
+        res.send({parsedhtml: json})
 
     });
 })
