@@ -80,10 +80,12 @@ app.get('/api/googledocs/:docID/:token', function(req, res) {
             Underscore.each(json, function(section){
                 Underscore.each(section.paragraphs, function(paragraph){
                     if(paragraph.code){
-                        paragraph.code = paragraph.code.join('\n')
+                        paragraph.code = paragraph.code.join('\n').replace('UTF-8', 'UTF-8\n');
+                    }
+                    if(paragraph.text){
+                        
                     }
                 })
-                
             })
 
 
