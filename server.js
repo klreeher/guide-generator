@@ -71,7 +71,7 @@ app.get('/api/googledocs/:docID/:token', function(req, res) {
                             );
                     } else {
                         json[length - 1].paragraphs.push({
-                            text: data.text()
+                            text: data.html()
                         });
                     }
                 }
