@@ -1,0 +1,18 @@
+<div class="container">
+    <article id="Preview">
+        <header class="docs-header">
+            <span class="docs-header-breadcrumb">Guides &middot; Business Use Cases &middot; <h1>Preview</h1></span>
+        </header>
+        <div class="docs-wrapper">
+            <div class="content_guides">
+                <section class="guides-section" ng-repeat="section in base.previewGuide">
+                    <h2><i class="fa fa-hashtag" ngclipboard-success="docs.copyLinkSuccess(e)" ngclipboard data-clipboard-text="{{docs.generateLink(section.tag)}}"></i> {{section.title}} </h2>
+                    <div ng-repeat="paragraph in section.paragraphs">
+                        <p ng-bind-html="paragraph.text"></p>
+                        <pre prism class="language-http" ng-if="paragraph.code" source="{{paragraph.code}}"></pre>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </article>
+</div>
