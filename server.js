@@ -41,62 +41,71 @@ app.get('/api/googledocs/:docID/:token', function(req, res) {
         if (!error) {
             //cheerio loads html to prepare for dom manipulation
             var $ = cheerio.load(html);
-
             //variables for holding data
             var title, tag;
-            var paragraphs = [];
-            var code = [];
-            var json = []
-
+            var json = [];
+            //variables for establishing code position
+            var count,
+                codeSet,
+                codePoint;
             $('body').children().filter(function produceSections(index, element) {
                 var data = $(element);
-                var next = $(element[index + 1])
                 var length = json.length;
-
-                if (data.is('h1') || data.is('h2')|| data.is('h3') || data.is('h4') ||data.is('h5') && data.text()) {
+                if (data.is('h1') || data.is('h2') || data.is('h3') || data.is('h4') || data.is('h5') && data.text()) {
+                    count = 0;
+                    codeSet = false;
                     json.push({
                         title: data.text(),
                         tag: data.text().replace(/[^0-9a-zA-Z]/g, ''),
-                        paragraphs: [{
-                            code:[]
-                        }]
+                        paragraphs: []
                     })
                 }
-
+                if(data.is('ol') && data.text()){
+                    var arr = [];
+                    data.children('li').each(function(){
+                        arr.push($(this).text())
+                    })
+                    json[length - 1].paragraphs.push({
+                        orderedList:arr
+                    })
+                }
+                if(data.is('ul') && data.text()){
+                    var arr = [];
+                    data.children('li').each(function(){
+                        arr.push($(this).text())
+                    })
+                    json[length - 1].paragraphs.push({
+                        unOrderedList:arr
+                    })
+                }
                 if (data.is('p') && data.text()) {
-                    //bold: css('font-weight') == '700'
                     if (data.children().css('color') == '#ff0000') {
-                            json[length - 1].paragraphs[0].code.push(
-                                data.text()
-                            );
+                        if (!codeSet) {
+                            codeSet = true;
+                            codePoint = count;
+                            json[length - 1].paragraphs.push({
+                                code: ""
+                            })
+                        }
+                        if(data.text() == 'Content-Type: application/json; charset=UTF-8'){
+                            json[length - 1].paragraphs[codePoint].code += data.text() + "\n\n";
+                        }else{
+                            json[length - 1].paragraphs[codePoint].code += data.text() + "\n";
+                        }
                     } else {
                         json[length - 1].paragraphs.push({
                             text: data.html()
                         });
                     }
+                    count++;
                 }
             })
-
-            Underscore.each(json, function(section){
-                Underscore.each(section.paragraphs, function(paragraph){
-                    if(paragraph.code){
-                        paragraph.code = paragraph.code.join('\n').replace('UTF-8', 'UTF-8\n');
-                    }
-                    if(paragraph.text){
-                        
-                    }
-                })
-            })
-
-
         }
-        fs.writeFile('output.json', JSON.stringify(json, null, 4), function(err) {
-                //use file system to write, output to output.json on root
-                console.log('File successfully written! - Check your project directory for the output.json file');
-            })
-            // Finally, we'll just send out a message to the browser reminding you that this app does not have a UI.
-        res.send({parsedhtml: json})
-
+        fs.writeFile('output.json', JSON.stringify(json, null, 4), function (err) {
+            //use file system to write, output to output.json on root for testing purpose
+            console.log('File successfully written! - Check your project directory for the output.json file');
+        })
+        res.send({ parsedhtml: json })
     });
 })
 
@@ -104,7 +113,7 @@ switch (env) {
     case 'production':
         console.log('*** PROD ***');
         app.use(express.static(config.root + config.compile.replace('.', '')));
-        app.get('/*', function(req, res) {
+        app.get('/*', function (req, res) {
             res.sendFile(config.root + config.compile.replace('.', '') + 'index.html');
         });
         break;
@@ -114,7 +123,7 @@ switch (env) {
         app.use(express.static(config.root + config.src.replace('.', '') + 'app/'));
         app.use(express.static(config.root));
         app.use(express.static(config.root + config.components.dir));
-        app.get('/*', function(req, res) {
+        app.get('/*', function (req, res) {
             res.sendFile(config.root + config.build.replace('.', '') + 'index.html');
         });
         break;
