@@ -1,0 +1,26 @@
+<div class="container">
+    <article id="Guidelines">
+        <header class="docs-header">
+            <span class="docs-header-breadcrumb">Guides &middot; Guidelines</span>
+        </header>
+        <div class="docs-wrapper">
+            <div class="content_guides">
+                <section class="guides-section">
+                    <h2><i class="fa fa-hashtag" ngclipboard-success="docs.copyLinkSuccess(e)" ngclipboard data-clipboard-text="{{docs.generateLink(section.tag)}}"></i>Requirements </h2>
+                    <p>In order for your Google Docs guide to be correctly parsed by this generator, you will need to ensure it is correctly formatted. You guide must:</p>
+                    <ul>
+                        <li>Have at least one title (with h1, h2, h3, h4 or h5 heading) at the very top before any paragraphs</li>
+                        <li>Any text you want interpreted as code will need to be colored <span style="color:red">red</span>. Hover over the colors in the color palette and makes sure its plain red and not some other shade</li>
+                        <li>No google docs comments can be visible, they should be resolved or closed</li>
+                    </ul>
+                </section>
+                <section class="guides-section">
+                    <h2><i class="fa fa-hashtag" ngclipboard-success="docs.copyLinkSuccess(e)" ngclipboard data-clipboard-text="{{docs.generateLink(section.tag)}}"></i>Known Issues </h2>
+                    <ul>
+                        <li> There can only be one code block per section - working to fix this</li>
+                    </ul>
+                </section>
+            </div>
+        </div>
+    </article>
+</div>
