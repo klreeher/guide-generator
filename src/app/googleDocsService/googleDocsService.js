@@ -7,7 +7,7 @@ function googleDocs($resource){
     }
     function getGuide(url, token){
         var docID = url.replace('https://', '').split('/')[3];
-        return $resource('http://localhost:3000/api/googledocs/' + docID + '/' + token).get().$promise;
+        return $resource('https://guideproducer.herokuapp.com/api/googledocs/' + docID + '/' + token).get().$promise;
     }
     return service;
 }
