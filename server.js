@@ -37,6 +37,7 @@ app.get('/api/googledocs/:docID/:token', function(req, res) {
     request(options, function(error, response, html) {
         if (error) {
             console.log('There was an error', error);
+            res.send('There was an error parsing your guide');
         }
         if (!error) {
             //cheerio loads html to prepare for dom manipulation
@@ -51,6 +52,7 @@ app.get('/api/googledocs/:docID/:token', function(req, res) {
             $('body').children().filter(function produceSections(index, element) {
                 var data = $(element);
                 var length = json.length;
+                //get headings and anchor tags
                 if (data.is('h1') || data.is('h2') || data.is('h3') || data.is('h4') || data.is('h5') && data.text()) {
                     count = 0;
                     codeSet = false;
@@ -60,25 +62,28 @@ app.get('/api/googledocs/:docID/:token', function(req, res) {
                         paragraphs: []
                     })
                 }
+                //get ordered list elements
                 if(data.is('ol') && data.text()){
                     var arr = [];
                     data.children('li').each(function(){
-                        arr.push($(this).text())
+                        arr.push($(this).html())
                     })
                     json[length - 1].paragraphs.push({
                         orderedList:arr
                     })
                 }
+                //get unordered list elements
                 if(data.is('ul') && data.text()){
                     var arr = [];
                     data.children('li').each(function(){
-                        arr.push($(this).text())
+                        arr.push($(this).html())
                     })
                     json[length - 1].paragraphs.push({
                         unOrderedList:arr
                     })
                 }
                 if (data.is('p') && data.text()) {
+                    //get code
                     if (data.children().css('color') == '#ff0000') {
                         if (!codeSet) {
                             codeSet = true;
@@ -92,7 +97,20 @@ app.get('/api/googledocs/:docID/:token', function(req, res) {
                         }else{
                             json[length - 1].paragraphs[codePoint].code += data.text() + "\n";
                         }
-                    } else {
+                    } 
+                    else {
+                        data.children('span').each(function(){
+                            if($(this).css('font-weight') == 700){
+                                $(this).wrap('<strong></strong>');
+                            }
+                            if($(this).css('font-style') == 'italic'){
+                                $(this).wrap('<em></em>');
+                            }
+                        })
+                        if(data.children().children('a').attr('href')){
+                            var originalUrl = data.children().children('a').attr('href').replace('https://www.google.com/url?q=', '').split('&sa=')[0];
+                            data.children().children('a').attr('href', originalUrl);
+                        }
                         json[length - 1].paragraphs.push({
                             text: data.html()
                         });
