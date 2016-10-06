@@ -3,6 +3,10 @@
         <header class="docs-header">
             <span class="docs-header-breadcrumb">Guides &middot; Business Use Cases &middot; <h1>Preview</h1></span>
         </header>
+        <div class="jumbotron" ng-if="!base.previewGuide">
+            <h1>Guide not showing?</h5>
+            <p>If you aren't seeing your generated guide here be sure to check out the <a ui-sref="guidelines">guidelines</a> and ensure your guide is correctly formatted.</p>
+        </div>
         <div class="docs-wrapper">
             <div class="content_guides">
                 <section class="guides-section" ng-repeat="section in base.previewGuide">
@@ -10,6 +14,12 @@
                     <div ng-repeat="paragraph in section.paragraphs">
                         <p ng-bind-html="paragraph.text"></p>
                         <pre prism class="language-http" ng-if="paragraph.code" source="{{paragraph.code}}"></pre>
+                        <ol>
+                            <li ng-repeat="li in paragraph.orderedList" ng-bind-html="li"></li>
+                        </ol>
+                        <ul >
+                            <li ng-repeat ="li in paragraph.unOrderedList" ng-bind-html="li"></li>
+                        </ul>
                     </div>
                 </section>
             </div>
