@@ -11,7 +11,10 @@ var mongoose = require('mongoose'), //mongoose for mongo db
     request = require('request'), //make authenticated http requests
     fs = require('fs'), //internal file system, enables saving files
     cheerio = require('cheerio'), //jquery-like functions to filter response bodies
-    Underscore = require('underscore');
+    Underscore = require('underscore'),
+    stripBom = require('strip-bom'),
+    marked = require('marked')
+    ;
 
 // configuration ==============================
 mongoose.connect('mongodb://cramirez:fails345@ds017256.mlab.com:17256/cat-feeder'); //connect to mongoDB database
@@ -25,7 +28,7 @@ app.use(bodyParser.json({
 
 // scraping endpoint =========================
 app.get('/api/googledocs/:docID/:token', function(req, res) {
-    var apiurl = 'https://www.googleapis.com/drive/v3/files/' + req.params.docID + '/export?mimeType=text/html'
+    var apiurl = 'https://www.googleapis.com/drive/v3/files/' + req.params.docID + '/export?mimeType=text/plain'
     var options = {
         url: apiurl,
         headers: {
@@ -48,102 +51,8 @@ app.get('/api/googledocs/:docID/:token', function(req, res) {
                     $(this).addClass('language-javascript');
                 }
             })
-           
-
             res.status(200).json({parsedhtml: $.html() })
         } 
-        // if (!error) {
-        //     //cheerio loads html to prepare for dom manipulation
-        //     console.log(html);
-        //     var $ = cheerio.load(html);
-        //     //variables for holding data
-        //     var title, tag;
-        //     var json;
-        //     //console.log($.text())
-        //     //variables for establishing code position
-        //     var count,
-        //         codeSet,
-        //         codePoint;
-        //     $('body').children().filter(function produceSections(index, element) {
-        //         var data = $(element);
-        //         //console.log(data.text());
-        //         if (data.text()){
-        //             json += data.text();
-        //         } else {
-        //             json += '\n'
-        //         }
-        //         //get headings and anchor tags
-        //         // if (data.is('h1') || data.is('h2') || data.is('h3') || data.is('h4') || data.is('h5') && data.text()) {
-        //         //     count = 0;
-        //         //     codeSet = false;
-        //         //     json.push({
-        //         //         title: data.text(),
-        //         //         tag: data.text().replace(/[^0-9a-zA-Z]/g, ''),
-        //         //         paragraphs: []
-        //         //     })
-        //         // }
-        //         // //get ordered list elements
-        //         // if(data.is('ol') && data.text()){
-        //         //     var arr = [];
-        //         //     data.children('li').each(function(){
-        //         //         arr.push($(this).html())
-        //         //     })
-        //         //     json[length - 1].paragraphs.push({
-        //         //         orderedList:arr
-        //         //     })
-        //         // }
-        //         // //get unordered list elements
-        //         // if(data.is('ul') && data.text()){
-        //         //     var arr = [];
-        //         //     data.children('li').each(function(){
-        //         //         arr.push($(this).html())
-        //         //     })
-        //         //     json[length - 1].paragraphs.push({
-        //         //         unOrderedList:arr
-        //         //     })
-        //         // }
-        //         // if (data.is('p') && data.text()) {
-        //         //     //get code
-        //         //     if (data.children().css('color') == '#ff0000') {
-        //         //         if (!codeSet) {
-        //         //             codeSet = true;
-        //         //             codePoint = count;
-        //         //             json[length - 1].paragraphs.push({
-        //         //                 code: ""
-        //         //             })
-        //         //         }
-        //         //         if(data.text() == 'Content-Type: application/json; charset=UTF-8'){
-        //         //             json[length - 1].paragraphs[codePoint].code += data.text() + "\n\n";
-        //         //         }else{
-        //         //             json[length - 1].paragraphs[codePoint].code += data.text() + "\n";
-        //         //         }
-        //         //     } 
-        //         //     else {
-        //         //         data.children('span').each(function(){
-        //         //             if($(this).css('font-weight') == 700){
-        //         //                 $(this).wrap('<strong></strong>');
-        //         //             }
-        //         //             if($(this).css('font-style') == 'italic'){
-        //         //                 $(this).wrap('<em></em>');
-        //         //             }
-        //         //         })
-        //         //         if(data.children().children('a').attr('href')){
-        //         //             var originalUrl = data.children().children('a').attr('href').replace('https://www.google.com/url?q=', '').split('&sa=')[0];
-        //         //             data.children().children('a').attr('href', originalUrl);
-        //         //         }
-        //         //         json[length - 1].paragraphs.push({
-        //         //             text: data.html()
-        //         //         });
-        //         //     }
-        //         //     count++;
-        //         // }
-        //     })
-        // }
-        // fs.writeFile('output.json', JSON.stringify(json, null, 4), function (err) {
-        //     //use file system to write, output to output.json on root for testing purpose
-        //     console.log('File successfully written! - Check your project directory for the output.json file');
-        // })
-        // res.send({ parsedhtml: json })
     });
 })
 
