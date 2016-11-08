@@ -107,36 +107,51 @@ function BaseConfig($stateProvider, $injector) {
     $stateProvider.state('base', baseState);
 }
 
-function BaseController($rootScope, $ocMedia, Underscore, snapRemote, defaultErrorMessageResolver, CurrentUser, ComponentList, base, $window, googleDocs, toastr, $state) {
+function BaseController($rootScope, $element, $ocMedia, Underscore, snapRemote, defaultErrorMessageResolver, CurrentUser, ComponentList, base, $window, googleDocs, toastr, $state, $timeout, $compile, $templateCache, $scope) {
     var vm = this;
     vm.left = base.left;
     vm.right = base.right;
     vm.currentUser = CurrentUser;
     vm.catalogItems = ComponentList.nonSpecific;
     vm.organizationItems = ComponentList.buyerSpecific;
-    vm.registrationAvailable = Underscore.filter(vm.organizationItems, function(item) { return item.StateRef == 'registration' }).length;
+    vm.registrationAvailable = Underscore.filter(vm.organizationItems, function(item) {
+        return item.StateRef == 'registration'
+    }).length;
     vm.previewGuide;
 
     // Your Client ID can be retrieved from your project in the google
     // Developer Console, https://console.developers.google.com
     var CLIENT_ID = '357254235618-0rk836rghajrgnqvi5pjo8nko2og3l3c.apps.googleusercontent.com';
     var SCOPES = ['https://www.googleapis.com/auth/drive.readonly'];
-    
+
+    $scope.$on('$viewContentLoaded', function() {
+        //highlights code wrapped in pre tag, when it has loaded.
+        $timeout(function() {
+            angular.element($element[0]).find('code').each(function() {
+                if (angular.element(angular.element(this)[0].parentElement)[0].tagName === 'PRE') {
+                    Prism.highlightElement(this)
+                }
+            })
+        })
+    });
     vm.generateGuide = function() {
-        $window.gapi.auth.authorize(
-          {client_id: CLIENT_ID, scope: SCOPES, immediate: false})
-            .then(function(auth){
-				console.log('access token: ' + auth.access_token)
+        $window.gapi.auth.authorize({
+                client_id: CLIENT_ID,
+                scope: SCOPES,
+                immediate: false
+            })
+            .then(function(auth) {
+                console.log('access token: ' + auth.access_token)
                 googleDocs.getGuide(vm.docsURL, auth.access_token)
-                    .then(function(data){
-                        vm.previewGuide = data.parsedhtml
+                    .then(function cleanHTML(data) {
+                        console.log(data);
+                        vm.previewGuide = data.parsedhtml;
                         $state.go('preview');
-                        toastr.success('Success! Guide Created')
                     })
             })
-      }
+    }
 
-    defaultErrorMessageResolver.getErrorMessages().then(function (errorMessages) {
+    defaultErrorMessageResolver.getErrorMessages().then(function(errorMessages) {
         errorMessages['customPassword'] = 'Password must be at least eight characters long and include at least one letter and one number';
         //regex for customPassword = ^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d!$%@#£€*?&]{8,}$
         errorMessages['positiveInteger'] = 'Please enter a positive integer';
