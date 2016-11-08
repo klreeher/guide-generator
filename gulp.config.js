@@ -39,7 +39,8 @@ module.exports = {
     secondaryBowerScripts: [
         bowerFiles + 'prism/components/prism-swift.js',
         bowerFiles + 'prism/components/prism-ruby.js',
-        bowerFiles + 'prism/components/prism-http.js'
+        bowerFiles + 'prism/components/prism-http.js',
+        bowerFiles + 'prism/components/prism-css.js'
     ],
     components: {
         dir: components,
