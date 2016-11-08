@@ -77,6 +77,7 @@
     "require-dir": "^0.3.0",
     "selenium-standalone": "^4.9.1",
     "selenium-webdriver": "^2.52.0",
+    "strip-bom": "^3.0.0",
     "yargs": "^3.32.0"
   },
   "devDependencies": {}
