@@ -20,6 +20,11 @@
             </li>
         </ul>
     </nav>
+    <nav class="docs-nav">
+        <ul>
+            <li ng-repeat="anchor in base.previewGuide.anchorTags" class="endpoint"><a ng-href="{{'#' + anchor.tag}}">{{anchor.title}}</a></li>
+        </ul>
+    </nav>
     <nav ng-if="base.organizationItems.length">
         <h4 class="text-primary"><b>Buyer Company</b></h4>
         <ordercloud-select-buyer></ordercloud-select-buyer>
