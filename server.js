@@ -47,8 +47,6 @@ app.get('/api/googledocs/:docID/:token', function(req, res) {
         }
     }
     var parsedHtml;
-    var anchorTags;
-    var guideTitle;
     request(getHTML, function(error, response, html) {
         if (error) {
             console.log('There was an error', error);
@@ -71,9 +69,9 @@ app.get('/api/googledocs/:docID/:token', function(req, res) {
                 }
             })
             $('h2').each(function(){
-                var title = $(this).text();
+                var name = $(this).text();
                 var tag = $(this).attr('id');
-                anchorTags.push({title:title, tag:tag})
+                anchorTags.push({name:name, tag:tag})
             })
             parsedHtml = $.html()
         }
@@ -82,9 +80,20 @@ app.get('/api/googledocs/:docID/:token', function(req, res) {
                 console.log('There was an error', error);
                 res.send('There was an error parsing your guide');
             } else{
-                guideTitle = JSON.parse(html).name;
+                var guideTitle = JSON.parse(html).name;
+                var guideID = guideTitle.toLowerCase().replace(/ /g, '-');
+                
+                var guideContent = {
+                    guideTitle:guideTitle,
+                    parsedHtml:parsedHtml
+                }
+                var navContent = {
+                    name:guideTitle, chapter:'Base Use Cases', 
+                    stateLink:{name:'guides',params:{sectionID:'base-use-cases', guideID:guideID}},
+                    anchorTags:anchorTags
+                }
             }
-            res.status(200).json({guideTitle:guideTitle, parsedHtml: parsedHtml ,anchorTags:anchorTags })
+            res.status(200).json({ guideContent:guideContent, navContent: navContent })
         }) 
     });
 })
