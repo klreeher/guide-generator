@@ -133,7 +133,8 @@ function BaseController($rootScope, $sce,  $element, $ocMedia, Underscore, snapR
                 console.log('access token: ' + auth.access_token)
                 googleDocs.getGuide(vm.docsURL, auth.access_token)
                     .then(function(data) {
-                        console.log(data);
+                        var snapshot = angular.copy(data);
+                        console.log(snapshot);
                         data.parsedHtml = $sce.trustAsHtml(data.parsedHtml);
                         vm.previewGuide = data;
                         $state.go('preview');
