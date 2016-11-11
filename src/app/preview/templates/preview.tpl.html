@@ -1,14 +1,13 @@
-<div class="container">
     <article id="Guidelines">
         <header class="docs-header">
-            <span class="docs-header-breadcrumb">Guides &middot; Guidelines</span>
+            <span ng-if="!base.previewGuide.guideTitle"> Preview Guide </span>
+            <span ng-if="base.previewGuide.guideTitle" class="docs-header-breadcrumb">Guides &middot; Base Use Cases &middot; {{base.previewGuide.guideTitle}}</span>
         </header>
         <div class="docs-wrapper">
             <div class="content_guides">
                 <section class="guides-section language-http">
-                    <div id="insertPreview" ng-bind-html="base.previewGuide"> </div>
+                    <div id="insertPreview" ng-bind-html="base.previewGuide.parsedHtml"> </div>
                 </section>
             </div>
         </div>
     </article>
-</div>
