@@ -30,20 +30,31 @@ app.use(bodyParser.json({
 
 // scraping endpoint =========================
 app.get('/api/googledocs/:docID/:token', function(req, res) {
-    var apiurl = 'https://www.googleapis.com/drive/v3/files/' + req.params.docID + '/export?mimeType=text/plain'
-    var options = {
-        url: apiurl,
+    var getGuideContentUrl = 'https://www.googleapis.com/drive/v3/files/' + req.params.docID + '/export?mimeType=text/plain';
+    var getGuideTitleUrl = 'https://www.googleapis.com/drive/v3/files/' + req.params.docID;
+    var getHTML = {
+        url: getGuideContentUrl,
         headers: {
             'Content-Type': 'text/html',
             'Authorization': 'Bearer ' + req.params.token
         }
     }
-
-    request(options, function(error, response, html) {
+    var getGuideTitle = {
+        url: getGuideTitleUrl,
+        headers: {
+            'Content-Type': 'text/html',
+            'Authorization': 'Bearer ' + req.params.token
+        }
+    }
+    var parsedHtml;
+    var anchorTags;
+    var guideTitle;
+    request(getHTML, function(error, response, html) {
         if (error) {
             console.log('There was an error', error);
             res.send('There was an error parsing your guide');
         } else {
+            var anchorTags = [];
             var $ = cheerio.load(marked(stripBom(html)));
             $('pre').each(function(){
                 if($(this).text().indexOf('Authentication: Bearer put_access_token_here') > -1){
@@ -59,8 +70,22 @@ app.get('/api/googledocs/:docID/:token', function(req, res) {
                     $(this).addClass('language-javascript');
                 }
             })
-            res.status(200).json({parsedhtml: $.html() })
-        } 
+            $('h2').each(function(){
+                var title = $(this).text();
+                var tag = $(this).attr('id');
+                anchorTags.push({title:title, tag:tag})
+            })
+            parsedHtml = $.html()
+        }
+        request(getGuideTitle, function(error, response, html){
+            if(error){
+                console.log('There was an error', error);
+                res.send('There was an error parsing your guide');
+            } else{
+                guideTitle = JSON.parse(html).name;
+            }
+            res.status(200).json({guideTitle:guideTitle, parsedHtml: parsedHtml ,anchorTags:anchorTags })
+        }) 
     });
 })
 
