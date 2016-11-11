@@ -135,7 +135,7 @@ function BaseController($rootScope, $sce,  $element, $ocMedia, Underscore, snapR
                     .then(function(data) {
                         var snapshot = angular.copy(data);
                         console.log(snapshot);
-                        data.parsedHtml = $sce.trustAsHtml(data.parsedHtml);
+                        data.guideContent.parsedHtml = $sce.trustAsHtml(data.guideContent.parsedHtml);
                         vm.previewGuide = data;
                         $state.go('preview');
                     })
