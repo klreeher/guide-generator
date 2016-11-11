@@ -124,16 +124,16 @@ function BaseController($rootScope, $element, $ocMedia, Underscore, snapRemote, 
     var CLIENT_ID = '357254235618-0rk836rghajrgnqvi5pjo8nko2og3l3c.apps.googleusercontent.com';
     var SCOPES = ['https://www.googleapis.com/auth/drive.readonly'];
 
-    $scope.$on('$viewContentLoaded', function() {
-        //highlights code wrapped in pre tag, when it has loaded.
-        $timeout(function() {
-            angular.element($element[0]).find('code').each(function() {
-                if (angular.element(angular.element(this)[0].parentElement)[0].tagName === 'PRE') {
-                    Prism.highlightElement(this)
-                }
-            })
-        })
-    });
+    // $scope.$on('$viewContentLoaded', function() {
+    //     //highlights code wrapped in pre tag, when it has loaded.
+    //     $timeout(function() {
+    //         angular.element($element[0]).find('code').each(function() {
+    //             if (angular.element(angular.element(this)[0].parentElement)[0].tagName === 'PRE') {
+    //                 Prism.highlightElement(this)
+    //             }
+    //         })
+    //     })
+    // });
     vm.generateGuide = function() {
         $window.gapi.auth.authorize({
                 client_id: CLIENT_ID,

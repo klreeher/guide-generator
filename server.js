@@ -13,8 +13,10 @@ var mongoose = require('mongoose'), //mongoose for mongo db
     cheerio = require('cheerio'), //jquery-like functions to filter response bodies
     Underscore = require('underscore'),
     stripBom = require('strip-bom'),
-    marked = require('marked')
+    marked = require('marked'),
+    Prism = require('prismjs')
     ;
+require('prismjs/components/prism-http');
 
 // configuration ==============================
 mongoose.connect('mongodb://cramirez:fails345@ds017256.mlab.com:17256/cat-feeder'); //connect to mongoDB database
@@ -45,9 +47,15 @@ app.get('/api/googledocs/:docID/:token', function(req, res) {
             var $ = cheerio.load(marked(stripBom(html)));
             $('pre').each(function(){
                 if($(this).text().indexOf('Authentication: Bearer put_access_token_here') > -1){
+                    var codeToHighlight = $(this).text();
+                    var httpCode = Prism.highlight(codeToHighlight, Prism.languages.http);
+                    $(this).html(httpCode);
                     $(this).addClass('language-http');
                 }
                 else{
+                    var codeToHighlight = $(this).text();
+                    var jsCode = Prism.highlight(codeToHighlight, Prism.languages.javascript);
+                    $(this).html(jsCode);
                     $(this).addClass('language-javascript');
                 }
             })
