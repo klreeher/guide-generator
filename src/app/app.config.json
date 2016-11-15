@@ -1,6 +1,6 @@
 {
 	"appname": "guide-generator",
-	"scope": "FullAccess DevCenterImpersonate",
+	"scope": "FullAccess",
 	"clientid": "E3E1B2E9-D0F0-4756-949E-A21AC930B6CA",
 	"buyerid": null,
 	"environment": "prod",
