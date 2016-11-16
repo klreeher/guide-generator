@@ -20,11 +20,26 @@
             </li>
         </ul>
     </nav>
+    <!-- Docs Guide Preview Nav -->
     <nav class="docs-nav">
         <ul>
-            <li ng-repeat="anchor in base.previewGuide.navContent.anchorTags" class="endpoint"><a ng-href="{{'#' + anchor.tag}}">{{anchor.name}}</a></li>
+            <li class="chapter">
+                Base Use Cases
+            </li>
+            <div>
+                <ul>
+                    <li class="resource"><a ng-href="#">{{base.previewGuide.guideContent.guideTitle}}</a></li>
+                </ul>
+                <div>
+                    <ul>
+                        <li ng-repeat="anchor in base.previewGuide.navContent.anchorTags"
+                            class="endpoint"><a ng-href="{{'#' + anchor.tag}}">{{anchor.name}}</a></li>
+                    </ul>
+                </div>
+            </div>
         </ul>
     </nav>
+    <!-- END Docs Guide Preview Nav -->
     <nav ng-if="base.organizationItems.length">
         <h4 class="text-primary"><b>Buyer Company</b></h4>
         <ordercloud-select-buyer></ordercloud-select-buyer>
