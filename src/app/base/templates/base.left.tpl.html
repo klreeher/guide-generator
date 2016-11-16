@@ -12,23 +12,15 @@
             </li>
         </ul>
     </nav>
-    <nav ng-if="base.catalogItems.length">
-        <h4 class="text-primary"><b>Organization</b></h4>
-        <ul class="nav nav-pills nav-stacked">
-            <li role="presentation" ng-repeat="item in base.catalogItems | occomponents | orderBy:'Display'" ui-sref-active="active">
-                <a href="" ui-sref="{{item.StateRef}}">{{item.Display}}</a>
-            </li>
-        </ul>
-    </nav>
     <!-- Docs Guide Preview Nav -->
-    <nav class="docs-nav">
+    <nav class="docs-nav" ng-if="base.previewGuide.guideContent.guideTitle">
         <ul>
             <li class="chapter">
                 Base Use Cases
             </li>
             <div>
                 <ul>
-                    <li class="resource"><a ng-href="#">{{base.previewGuide.guideContent.guideTitle}}</a></li>
+                    <li class="resource active"><a ng-href="#">{{base.previewGuide.guideContent.guideTitle}}</a></li>
                 </ul>
                 <div>
                     <ul>
@@ -40,19 +32,6 @@
         </ul>
     </nav>
     <!-- END Docs Guide Preview Nav -->
-    <nav ng-if="base.organizationItems.length">
-        <h4 class="text-primary"><b>Buyer Company</b></h4>
-        <ordercloud-select-buyer></ordercloud-select-buyer>
-        <ul class="nav nav-pills nav-stacked">
-            <li role="presentation" ng-repeat="item in base.organizationItems | occomponents | orderBy:'Display'" ui-sref-active="active">
-                <a href="" ui-sref="{{item.StateRef}}">{{item.Display}}</a>
-                <div ng-if="item.Display == 'Catalog' && application.$state.includes('catalog')">
-                    <catalog-tree></catalog-tree>
-                    <ordercloud-catalog-facets></ordercloud-catalog-facets>
-                </div>
-            </li>
-        </ul>
-    </nav>
 </aside>
 
 
