@@ -1,312 +1,39 @@
-// Docs layout
-.ordercloud-docs {
-  background-color: #FFFFFF;
-  min-height: 100%;
-  h1, h2, h3, h4, h5, h6 {
-    color: @four51-blue;
-    font-weight: 300;
-  }
+// Guides variables
+@oc-docs-content-padding: 0 (@grid-gutter-width / 2) @grid-gutter-width;
+@oc-docs-content-lg-padding: 0 (@grid-gutter-width / 2) @grid-gutter-width (@grid-gutter-width * 1.5);
 
-  h3 {
-    text-transform: uppercase;
-    font-weight: 700;
-  }
-  h4 {
-    color: @sunset-yellow;
-  }
+// Guides Layout
+.oc-docs-offset {
+  max-width: 905px;
 }
 
 .docs-header {
-  background-color: white; //TODO: make a variable
-  padding: (@padding-base-vertical*2) @padding-base-horizontal;
-  border-bottom: 1px solid @four51-ltgray; //TODO: make a variable
-  font-size: 12px;
-  text-transform: uppercase;
-  color: @four51-dkgray;
-  font-weight: 300;
-  letter-spacing: 2px;
-  font-family: @font-family-sans-serif;
-  h1 {
-    font-family:@font-family-sans-serif;
-    font-weight: 700;
-    font-size: 12px;
-    margin: 5px 0 0;
-    display: inline-block;
-  }
-}
-
-.docs-wrapper {
-  transition: margin 400ms ease-in-out;
-  padding-top: @docs-header-height;
-  position: relative;
-  min-height: 100%;
-  z-index: 10;
-  left: 0;
-
-  .dark-bg {
-    width: @docs-dark-bg-width;
-    background-color: lighten(@four51-black, 5%);
-    position: absolute;
-    right: 0;
-    top: 0;
-    bottom: 0;
-  }
-  .title-anchor {
-    text-decoration: none;
-  }
-  .tooltip-placeholder {
-    display: block;
-    width: 25px;
-    height: 25px;
-    background-color: red;
-  }
-  .title-link {
-    cursor: pointer;
-    &:after {
-      opacity: 0;
-      transition: opacity 200ms ease-in-out;
-      margin-left: 15px;
-      color: @text-muted;
-      display: inline-block;
-      font: normal normal normal @fa-font-size-base/1 FontAwesome; // shortening font declaration
-      font-size: inherit; // can't have font-size inherit on line above, so need to override
-      text-rendering: auto; // optimizelegibility throws things off #1094
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-      transform: translate(0, 0); // ensures no half-pixel rendering in firefox
-      content: @fa-var-link;
-    }
-    &:hover {
-      &:after {
-        opacity: 1;
-      }
-    }
-  }
-}
-
-@media (min-width: @screen-xs-min) {
-  .docs-wrapper,
-  .docs-header {
-    margin-left: 0px;
-  }
-
-  .docs-header {
-    position: fixed;
-    height: @docs-header-height;
-    width: 100%;
-    z-index: 11;
-    margin-left: 0px;
-  }
-}
-
-@media (min-width: @screen-lg-min) {
-  .docs-wrapper,
-  .docs-header {
-    margin-left: 0px;
-  }
-}
-
-//Landing Page Layout
-.docs-section {
-  h2 {
-    text-transform: uppercase;
-    font-weight: 600;
-  }
-
-  small {
-    color:lighten(black, 70);
-    text-transform:none;
-  }
-
-  h2.panel-title {
-    display: inline-block;
-    padding-left: @grid-gutter-width;
-    padding-right: @grid-gutter-width;
-  }
-}
-
-// API Docs Layout
-.api-docs {
-  background-color: white; //TODO: make a variable
-}
-
-.content_api-docs {
-  position: relative;
-  z-index: 30;
-
-  h3,
-  h4 {
-
-    & > i {
-      color: @four51-ltgray;
-      transition: color 200ms ease-in-out;
-      cursor: pointer;
-      padding-right: (@grid-gutter-width * 2/3);
-      margin-left: -(@grid-gutter-width * 1);
-      width: @grid-gutter-width * 1;
-
-      &:hover,
-      &:focus {
-        color: @sunset-yellow;
-      }
-    }
-  }
-
-  aside, .table-contain,
-  h1, h2, h3, h4, h5, h6, p, dl ol, ul {
-    margin-right: calc(@docs-dark-bg-width ~ "+" @grid-gutter-width);
-    margin-left: @grid-gutter-width * 1.5;
-    //padding: 0 20px;
-  }
-  .content-split {
-    clear: both;
-    padding-bottom: @grid-gutter-width * 1/3;
-
-    &.last-content {
-      padding-bottom: @grid-gutter-width * 2;
-    }
-  }
-  .resource-hint {
-    color: lighten(@gray, 40);
-    float: right;
-  }
-  ol, ul {
-    padding-left: 40px;
-  }
-  .table {
-    .label {
-      display: block;
-    }
-  }
-
-  blockquote:not(.ignore) {
-    color: @gray-light;
-    border-left: none;
-    margin: 0;
-    padding: 0 @grid-gutter-width @padding-base-vertical;
-    background-color: transparent;
-    &:first-of-type {
-      padding-top: 0;
-    }
-    float: right;
-    clear: right;
-    width: @docs-dark-bg-width;
-  }
-  .apiRequestDisplay,
-  pre[class*="language-"] {
-    font-size: 12px;
-    line-height: 1.5;
-    border: none;
-    background-color: rgba(0, 0, 0, 0.2);
-    margin: 0 @grid-gutter-width 0 (@grid-gutter-width * 1.5);
-    float: right;
-    clear: right;
-    width: calc(@docs-dark-bg-width ~ "-" (@grid-gutter-width * 2));
-    border-radius: @border-radius-large;
-  }
-  .apiRequestDisplay {
-    margin-bottom: 20px;
-    pre {
-      margin: 0;
-      background-color: transparent;
-      &:first-child {
-        border: none;
-        background-color: fade(@ordercloud-blue, 40)
-      }
-      &:last-child {
-        color: @ordercloud-blue;
-      }
-    }
-  }
-}
-
-@media (max-width: @screen-lg-min) {
-  .content_api-docs {
-    aside, .table-contain,
-    h1, h2, h3, h4, h5, h6, p, dl ol, ul {
-      margin-right: @grid-gutter-width;
-    }
-    blockquote:not(.ignore),
-    blockquote {
-      padding: 0 @grid-gutter-width @padding-base-vertical (@grid-gutter-width * 1.5);
-      float: none;
-      width: auto;
-    }
-    pre[class*="language-"] {
-      margin-bottom: 20px;
-      background-color: darken(@ordercloud-blue, 40);
-      float: none;
-      width: auto;
-    }
-    .apiRequestDisplay {
-      width: auto;
-      margin: 0 @grid-gutter-width (@grid-gutter-width * 2/3) (@grid-gutter-width * 1.5);
-      float: none;
-
-      pre {
-        &:first-child {
-          background-color: @ordercloud-blue;
-        }
-        &:last-child {
-          background-color: lighten(black, 80);
-          color: @text-color;
-        }
-      }
-    }
-    blockquote {
-      color: @text-color;
-    }
-  }
-
-  .docs-wrapper {
-    .dark-bg {
-      display: none;
-    }
-  }
-}
-
-
-//TODO: this feels gross
-.guides-section,
-.chapter-block,
-.resource-block,
-.endpoint-block {
-  padding-top:195px;
-  margin-top:-195px;
-}
-
-.guides-section,
-.content_api-docs {
-
-  h2 {
-    color: @sunset-yellow;
-    font-weight: 300;
-    padding-bottom: @padding-large-vertical;
-    border-bottom: 1px solid @four51-ltgray; //TODO: make a variable
-  }
-
-  h2 {
-
-    & > i {
-      color: @four51-ltgray;
-      transition: color 200ms ease-in-out;
-      cursor: pointer;
-      padding-right: (@grid-gutter-width * 2/3);
-      margin-left: -(@grid-gutter-width * 1);
-      width: @grid-gutter-width * 1;
-
-      &:hover,
-      &:focus {
-        color: @sunset-yellow;
-      }
-    }
-  }
-}
-
-// Guides Layout
-.content_guides {
   max-width: @container-desktop;
-  padding: 0 @grid-gutter-width @grid-gutter-width (@grid-gutter-width * 1.5);
+  padding: @oc-docs-content-padding;
+  text-align: center;
+
+  i {
+    display: block;
+    margin-bottom: 15px;
+  }
+
+  span {
+    text-transform: uppercase;
+    color: @four51-dkgray;
+    font-size: 12px;
+    font-weight: 100;
+
+    h1,
+    h2{
+      text-transform: initial;
+      color: initial;
+      margin-top: 10px;
+    }
+  }
+}
+
+.oc-docs-content-wrap {
+  padding: @oc-docs-content-padding;
 
   .inline-button-label {
     text-transform: capitalize;
@@ -315,6 +42,38 @@
 }
 
 .guides-section {
+  padding-top: @grid-gutter-width / 2;
+
+  h2 {
+    color: @curry;
+    font-weight: 300;
+    margin-top: 0;
+    padding-bottom: @padding-large-vertical;
+    border-bottom: 1px solid @four51-ltgray; //TODO: make a variable
+    position: relative;
+
+    > i {
+      position: absolute;
+      color: #ffffff;
+      transition: color 200ms ease-in-out; //TODO: make a variable
+      cursor: pointer;
+      margin-left: -@grid-gutter-width;
+      width: 100%;
+
+      &:hover,
+      &:focus {
+        color: @curry;
+      }
+    }
+  }
+
+  h3 {
+    font-weight:bold;
+    color:@io-blue;
+    margin-top: 0;
+    padding-top: @grid-gutter-width / 3;
+  }
+
   figure {
     padding: 15px; //TODO: Make a variable
     border: 1px solid @gray-lighter;
@@ -322,80 +81,64 @@
     margin-bottom: 15px;
     text-align: center;
     background-color: #FFFFFF;
-  }
-}
-
-.hideElement {
-  display: none;
-}
-
-//Hover effects for anchor tags
-.docUnderline a {
-  position: relative;
-  text-decoration: none !important;
-  &:after {
-    border-bottom: 2px solid @link-hover-color;
-    bottom: 0;
-    content: '';
-    left: 0;
-    position: absolute;
-    transition: 0.4s;
-    width: 0%;
-  }
-  &:hover {
-    &:after {
-      width: 100%;
+    &.oc-docs-image-outline {
+      background-color:@four51-ltgray;
+      border-color:darken(@four51-ltgray, 5);
     }
   }
 }
 
-.benefit {
-  display:flex;
-  flex-flow:row nowrap;
-  align-items:center;
-  @media(max-width:@screen-xs-max) {
-    flex-flow:column nowrap;
+.docs-pager {
+  max-width: @container-desktop;
+  padding: @grid-gutter-width 0;
+  margin: @oc-docs-content-padding;
+  border-top: 1px solid @four51-ltgray;
+  small {
+    display:block;
   }
-  div {
-    flex:1;
-    &:first-of-type {
-      max-width:250px;
+}
+
+// API reference styles extended from Guides styles
+// TODO: Move these to api-reference.less without breaking them
+.content_api-docs {
+  h2 {
+    &:extend(.h1);
+    position: relative;
+
+    > i {
+      &:extend(.guides-section h2 > i all);
     }
   }
-  figure {
-    padding:0;
-    border:none;
-  }
-}
 
-#HTTPMethods,#Errors{
-  th, td{
-    text-align:center;
+  h3 {
+    &:extend(.h2);
+    &:extend(.guides-section h2 all);
   }
-}
 
-.docsearch-form {
-  position: fixed;
-  z-index: 1000;
-  right: 0;
-  top: 125px;
-  background-color: white;
-  padding: 7px 15px;
-  input {
-    width:350px;
-  }
-  @media(max-width:@screen-sm-max) {
-    input {
-      transition:width 200ms ease-in-out;
-      width:80px;
+  h4 {
+    position: relative;
+
+    & > i {
+      &:extend(.guides-section h2 > i all);
+
+      &:hover,
       &:focus {
-        width:350px;
+        color: @prince-nelson;
       }
     }
-
   }
 }
 
-.algolia-autocomplete .algolia-docsearch-footer {
-  display:none !important;
+@media(min-width:@screen-md-min) {
+  .oc-docs-content-wrap {
+    padding: @oc-docs-content-lg-padding;
+  }
+
+  .docs-header {
+    padding: @oc-docs-content-lg-padding;
+  }
+
+  .docs-pager {
+    margin: @oc-docs-content-lg-padding;
+  }
 }
