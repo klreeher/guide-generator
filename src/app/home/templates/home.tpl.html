@@ -1,13 +1,20 @@
-<article id="COMPONENT_Home">
-    <div class="container">
-        <p>To create a guide simply paste the link to your Google Doc in the text box below and click the generate button. Make sure your 
-        guide is correctly formatted and follows the <a ui-sref="guidelines">guidelines</a>
-        </p>
-        <form>
-            <div class="form-group">
-                <input type="text" ng-model="base.docsURL" placeholder="Paste Google Docs Link here" class="form-control"><br>
-            <button class="btn btn-primary btn-large" ng-click="base.generateGuide()" ng-disabled="!base.docsURL" class="form-control">Generate Guide</button>
+<div class="guide-generator-canvas-wrapper">
+    <div class="guide-generator-canvas">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8">
+                    <h1>Generate Guide</h1>
+                    <p>To create a guide simply paste the link to your Google Doc in the text box below and click the generate button. Make sure your
+                    guide is correctly formatted and follows the <a ui-sref="guidelines">guidelines</a>
+                    </p>
+                    <form>
+                        <div class="form-group">
+                            <input type="text" ng-model="base.docsURL" placeholder="Paste Google Docs Link here" class="form-control"><br>
+                        <button class="btn btn-primary btn-large" ng-click="base.generateGuide()" ng-disabled="!base.docsURL" class="form-control">Generate Guide</button>
+                        </div>
+                    </form>
+                </div>
             </div>
-        </form>
+        </div>
     </div>
-</article>
+</div>

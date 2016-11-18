@@ -2,19 +2,192 @@
 //overwrites that are not specific to components should be maintained.
 //Interconnected table color styles
 
+//== Four51 Colors
+
+@io-blue:           #0C648E;
+@ordercloud-blue:   #0090D6;
+@four51-blue:       #003843;
+@ragheb-red:        #9A0F00;
+@radically-yellow:  #FBD764;
+@sunset-yellow:     #c68900;
+@alien-green:       #00DF61;
+@spanish-green:     #009440;
+@sorbet:            #f26964;
+@curry:             #fab44b;
+@prince-nelson:     #2d3770;
+@four51-ltgray:     #E4E5E6;
+@four51-dkgray:     #A2A2A2;
+@four51-black:      #231F20;
+
+@ordercloudio-gradient:       linear-gradient(140deg,@ordercloud-blue 0, @io-blue 100%);
+@tequila-sunrise-gradient:    linear-gradient(140deg,@curry 0, @sorbet 100%);
+@purple-rain-gradient:        linear-gradient(140deg,@ordercloud-blue 0, @prince-nelson 100%);
+
+
+//== Bootstrap Colors
+
+@gray-base:         @four51-black;
+
+@brand-primary:     @io-blue;
+@brand-warning:     @sunset-yellow;
+@brand-danger:      @ragheb-red;
+@brand-success:     @spanish-green;
+@brand-info:        @ordercloud-blue;
+
+
+//== Scaffolding
+
+@link-color:        @ordercloud-blue;
+
+
 //== Typography
 
 @font-family-sans-serif:  'Gotham A', 'Gotham B', Arial, "Helvetica Neue", Helvetica, sans-serif;
 @headings-font-family:    'DIN', Arial, "Helvetica Neue", Helvetica, sans-serif;
 
 
-//Global Application Styles
-@app-container-size: 100%;
-@html-bg:darken(@body-bg, 25);
+//== Components
 
-//Table Infinite Scroll
-@table-header-height:@table-cell-padding*2 + @line-height-computed;
-@infinite-scroll-size: ~'calc(100vh - 420px)';
+@border-radius-large: 25px;
 
-//Global Component Styles
-@global-component-bg:@body-bg;
+
+//== Buttons
+
+@btn-font-weight:                normal;
+
+@btn-default-color:              @text-color;
+@btn-default-bg:                 white;
+@btn-default-border:             lighten(black, 90);
+
+@btn-primary-color:              @four51-blue;
+@btn-primary-bg:                 @radically-yellow;
+@btn-primary-border:             @btn-primary-bg;
+
+@btn-success-color:              white;
+@btn-success-bg:                 @brand-success;
+@btn-success-border:             @btn-success-bg;
+
+@btn-info-color:                 white;
+@btn-info-bg:                    @brand-info;
+@btn-info-border:                @btn-info-bg;
+
+@btn-warning-color:              white;
+@btn-warning-bg:                 @brand-warning;
+@btn-warning-border:             @btn-warning-bg;
+
+@btn-danger-color:               white;
+@btn-danger-bg:                  @brand-danger;
+@btn-danger-border:              @btn-danger-bg;
+
+@btn-link-disabled-color:        @gray-light;
+
+// Allows for customizing button radius independently from global border radius
+@btn-border-radius-base:         0;
+@btn-border-radius-large:        0;
+@btn-border-radius-small:        0;
+
+
+//== Forms
+
+//** `<input>` background color
+@input-bg:                       #fff;
+//** `<input disabled>` background color
+@input-bg-disabled:              @gray-lighter;
+
+//** Text color for `<input>`s
+@input-color:                    @text-color;
+//** `<input>` border color
+@input-border:                   #dce4ec;
+
+// TODO: Rename `@input-border-radius` to `@input-border-radius-base` in v4
+//** Default `.form-control` border radius
+// This has no effect on `<select>`s in some browsers, due to the limited stylability of `<select>`s in CSS.
+@input-border-radius:            @border-radius-base;
+//** Large `.form-control` border radius
+@input-border-radius-large:      @border-radius-large;
+//** Small `.form-control` border radius
+@input-border-radius-small:      @border-radius-small;
+
+//** Border color for inputs on focus
+@input-border-focus:             @brand-primary;
+
+//** Placeholder text color
+@input-color-placeholder:        #acb6c0;
+
+//** Default `.form-control` height
+@input-height-base:              (@line-height-computed + (@padding-base-vertical * 2) + 4);
+//** Large `.form-control` height
+@input-height-large:             (ceil(@font-size-large * @line-height-large) + (@padding-large-vertical * 2) + 4);
+//** Small `.form-control` height
+@input-height-small:             (floor(@font-size-small * @line-height-small) + (@padding-small-vertical * 2) + 4);
+
+//** `.form-group` margin
+@form-group-margin-bottom:       15px;
+
+@legend-color:                   @text-color;
+@legend-border-color:            transparent;
+
+//** Background color for textual input addons
+@input-group-addon-bg:           @gray-lighter;
+//** Border color for textual input addons
+@input-group-addon-border-color: @input-border;
+
+
+//== Navbar
+
+// Basics of a navbar
+@navbar-height: 80px;
+
+@navbar-default-color: fade(lighten(@io-blue,65%),30%);
+@navbar-default-bg: @brand-primary;
+@navbar-default-border: transparent;
+
+// Navbar links
+@navbar-default-link-color: fade(lighten(@io-blue,65%),65%);
+@navbar-default-link-hover-color: white; //TODO: make a variable
+@navbar-default-link-hover-bg: transparent;
+@navbar-default-link-active-color: @navbar-default-link-hover-color;
+@navbar-default-link-active-bg: transparent;
+
+
+//=== Inverted navbar
+// Reset inverted navbar basics
+@navbar-inverse-color:                      #ffffff;
+@navbar-inverse-bg:                         @ordercloud-blue;
+@navbar-inverse-border:                     none;
+
+// Inverted navbar links
+@navbar-inverse-link-color:                 lighten(@navbar-inverse-color, 15%);
+
+// Inverted navbar toggle
+@navbar-inverse-toggle-hover-bg:            transparent;
+@navbar-inverse-toggle-icon-bar-bg:         #fff;
+@navbar-inverse-toggle-border-color:        transparent;
+
+
+//== Navs
+
+//=== Shared nav styles
+@nav-link-hover-bg: transparent;
+
+//== Tabs
+@nav-tabs-border-color: @four51-ltgray;
+
+@nav-tabs-active-link-hover-color: @io-blue;
+
+@nav-tabs-link-hover-border-color: transparent;
+
+@nav-tabs-active-link-hover-border-color: transparent;
+
+//== Pills
+@nav-pills-border-radius: 0;
+@nav-pills-active-link-hover-bg: transparent;
+@nav-pills-active-link-hover-color: @sorbet;
+
+
+@modal-content-border-color: white;
+@modal-header-border-color: @modal-content-border-color;
+
+//== Panels
+
+@panel-border-radius: 0;
