@@ -1,13 +1,14 @@
+<div class="oc-docs-canvas">
     <article id="Guidelines">
         <header class="docs-header">
+            <i class="fa fa-map-o fa-2x"></i>
             <span ng-if="!base.previewGuide.guideContent.guideTitle"> Preview Guide </span>
-            <span ng-if="base.previewGuide.guideContent.guideTitle" class="docs-header-breadcrumb">Guides &middot; Base Use Cases &middot; {{base.previewGuide.guideContent.guideTitle}}</span>
+            <span ng-if="base.previewGuide.guideContent.guideTitle" class="docs-header-breadcrumb">Guides &middot; Base Use Cases<h1>{{base.previewGuide.guideContent.guideTitle}}</h1></span>
         </header>
-        <div class="docs-wrapper">
-            <div class="content_guides">
-                <section class="guides-section language-http">
-                    <div id="insertPreview" ng-bind-html="base.previewGuide.guideContent.parsedHtml"> </div>
-                </section>
-            </div>
+        <div class="oc-docs-content-wrap">
+            <section class="guides-section language-http">
+                <div id="insertPreview" ng-bind-html="base.previewGuide.guideContent.parsedHtml"> </div>
+            </section>
         </div>
     </article>
+</div>
