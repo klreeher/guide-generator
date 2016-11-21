@@ -1,0 +1,81 @@
+// OC specific nav variables
+@navbar-default-bg-img: @ordercloudio-gradient;
+
+.navbar-inverse {
+  background-image: @navbar-default-bg-img;
+}
+
+.oc-desktop-nav {
+  //Top navigation on desktop screen sizes
+
+  .navbar-brand {
+    padding-top: 23px;
+    padding-bottom: 23px;
+    // ¯\_(ツ)_/¯
+  }
+
+  .logo {
+    float: left;
+    padding: 0;
+  }
+
+  .account-dropdown {
+    .dropdown-menu {
+      .border-top-radius(4px);
+      top: 115%;
+      flex-flow: column nowrap;
+      padding: 15px;
+      width: 250px;
+    }
+
+    > a {
+      padding-top: 25px;
+      padding-bottom: 25px;
+      background-color: transparent !important; //Force removal of active-bg
+      color: white !important; //Force white active/focus color
+    }
+
+    &.open {
+      > .dropdown-menu {
+        display: flex;
+      }
+    }
+
+    hr {
+      margin: 15px -15px;
+    }
+  }
+  .navbar-nav > li >  a {
+    text-transform: uppercase;
+  }
+  .navbar-nav > .active > a {
+    &,
+    &:hover {
+      background-color: transparent;
+      color: white;
+
+      &:after {
+        content: "";
+        display: block;
+        border: 6px solid transparent;
+        border-bottom-color: #ffffff;
+        position: absolute;
+        bottom: -1px;
+        left: 50%;
+        margin-left: -6px;
+      }
+    }
+  }
+  .navbar-btn {
+    text-transform: uppercase;
+    margin: 20px 0px 0px 0px;
+    padding: 10px;
+    color: #003843 !important;
+    &:hover{
+      background-color: darken(#FBD764, 20%)!important;
+    }
+  }
+  .oc-logo {
+    width: 75px;
+  }
+}

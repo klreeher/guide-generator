@@ -1,0 +1,366 @@
+.oc-flex-layout(@suffix) {
+  [@{suffix}*='horizontal'],
+  [@{suffix}*='vertical'] {
+    display:flex;
+  }
+  [@{suffix}*='horizontal'] {
+    flex-direction: row;
+    &[@{suffix}*='gutter'] {
+      > * {
+        padding-left:(@grid-gutter-width / 2);
+        padding-right:(@grid-gutter-width / 2);
+
+        &:first-child {
+          padding-left:0;
+        }
+        &:last-child {
+          padding-right:0;
+        }
+      }
+    }
+  }
+  [@{suffix}*='vertical'] {
+    flex-direction: column;
+    &[@{suffix}*='gutter'] {
+      > * {
+        margin: (@grid-gutter-width / 2) 0;
+        &:first-child {
+          margin-top:0;
+        }
+        &:last-child {
+          margin-bottom:0;
+        }
+      }
+    }
+  }
+}
+
+.oc-flex-layout(oc-flex-layout-xs);
+
+@media(min-width:@screen-sm-min) {
+  .oc-flex-layout(oc-flex-layout-sm);
+}
+@media(min-width:@screen-md-min) {
+  .oc-flex-layout(oc-flex-layout-md);
+}
+@media(min-width:@screen-lg-min) {
+  .oc-flex-layout(oc-flex-layout-lg);
+}
+
+.oc-flex-layout {
+  display: flex;
+
+  &.horizontal,
+  &.vertical {
+    display:flex;
+  }
+  &.inline {
+    display:inline-flex;
+  }
+  &.horizontal {
+    flex-direction: row;
+    &.gutter {
+      > * {
+        padding-right:7.5px;
+        padding-left:7.5px;
+        &:first-child {
+          padding-left:0;
+        }
+        &:last-child {
+          padding-right:0;
+        }
+      }
+    }
+  }
+  &.vertical {
+    flex-direction: column;
+    &.gutter {
+      > * {
+        margin-top:7.5px;
+        margin-bottom:7.5px;
+        &:first-child {
+          margin-top:0;
+        }
+        &:last-child {
+          margin-bottom:0;
+        }
+      }
+    }
+  }
+  &.wrap {
+    flex-wrap: wrap;
+  }
+  &.no-wrap {
+    flex-wrap: nowrap;
+  }
+  .flex {
+    flex:1;
+    flex-basis: 0.000000001px;
+  }
+  .flex-auto {
+    flex: 1 1 auto;
+  }
+  .flex-none {
+    flex: none;
+  }
+  //reverse
+  &.horizontal-reverse,
+  &.vertical-reverse {
+    display: flex;
+  }
+  &.horizontal-reverse {
+    flex-direction: row-reverse;
+  }
+  &.vertical-reverse {
+    flex-direction: column-reverse;
+  }
+  &.wrap-reverse {
+    flex-wrap: wrap-reverse;
+  }
+  //alignment - cross axis
+  &.start {
+    align-items:flex-start;
+  }
+  &.center,
+  &.center-center {
+    align-items:center;
+  }
+  &.end {
+    align-items: flex-end;
+  }
+  &.baseline {
+    align-items:baseline;
+  }
+  //alignment - main axis
+  &.start-justified {
+    justify-content:flex-start;
+  }
+  &.center-justified,
+  &.center-center {
+    justify-content:center;
+  }
+  &.end-justified {
+    justify-content:flex-end;
+  }
+  &.around-justified {
+    justify-content: space-around;
+  }
+  &.between-justified {
+    justify-content: space-between;
+  }
+  //self alignment
+  .self-start {
+    align-self:flex-start;
+  }
+  .self-center {
+    align-self:center;
+  }
+  .self-end {
+    align-self:flex-end;
+  }
+  .self-stretch {
+    align-self:stretch;
+  }
+  .self-baseline {
+    align-self:baseline;
+  }
+  //multi-line alignment - main axis
+  &.start-aligned {
+    align-content: flex-start;
+  }
+  &.end-aligned {
+    align-content: flex-end;
+  }
+  &.center-aligned {
+    align-content: center;
+  }
+  &.between-aligned {
+    align-content: space-between;
+  }
+  &.around-aligned {
+    justify-content: space-around;
+  }
+  // flex factors
+  .flex-grow {
+    flex-grow:1;
+  }
+  .flex-shrink {
+    flex-shrink:1;
+  }
+  .flex,
+  .flex-1 {
+    flex:1;
+    flex-basis: 0.000000001px;
+  }
+  .flex-2 {
+    flex: 2;
+  }
+  .flex-3 {
+    flex: 3;
+  }
+  .flex-4 {
+    flex: 5;
+  }
+  .flex-5 {
+    flex: 5;
+  }
+  .flex-6 {
+    flex: 6;
+  }
+  .flex-7 {
+    flex: 7;
+  }
+  .flex-8 {
+    flex: 8;
+  }
+  .flex-9 {
+    flex: 9;
+  }
+  .flex-10 {
+    flex: 10;
+  }
+  .flex-12 {
+    flex: 12;
+  }
+  .block {
+    display: block;
+  }
+  /* IE 10 support for HTML5 hidden attr */
+  [hidden] {
+    display: none !important;
+  }
+  .invisible {
+    visibility: hidden !important;
+  }
+  .relative {
+    position: relative;
+  }
+  .fit {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+  }
+  body.fullbleed {
+    margin: 0;
+    height: 100vh;
+  }
+  .scroll {
+    -webkit-overflow-scrolling: touch;
+    overflow: auto;
+  }
+  /* fixed position */
+  .fixed-bottom,
+  .fixed-left,
+  .fixed-right,
+  .fixed-top {
+    position: fixed;
+  }
+  .fixed-top {
+    top: 0;
+    left: 0;
+    right: 0;
+  }
+  .fixed-right {
+    top: 0;
+    right: 0;
+    bottom: 0;
+  }
+  .fixed-bottom {
+    right: 0;
+    bottom: 0;
+    left: 0;
+  }
+  .fixed-left {
+    top: 0;
+    bottom: 0;
+    left: 0;
+  }
+}
+
+[class*="flex-col"] {
+  flex-basis: 100%;
+  max-width: 100%;
+  padding-left: @grid-gutter-width / 2;
+  padding-right: @grid-gutter-width / 2;
+}
+
+.flex-col(@suffix) {
+  .flex-col@{suffix}-1,
+  .flex-col@{suffix}-2,
+  .flex-col@{suffix}-3,
+  .flex-col@{suffix}-4,
+  .flex-col@{suffix}-5,
+  .flex-col@{suffix}-6,
+  .flex-col@{suffix}-7,
+  .flex-col@{suffix}-8,
+  .flex-col@{suffix}-9,
+  .flex-col@{suffix}-10,
+  .flex-col@{suffix}-11,
+  .flex-col@{suffix}-12 {
+    box-sizing: border-box;
+    flex: 0 0 auto;
+  }
+  .flex-col@{suffix}-1 {
+    flex-basis: 8.33333333%;
+    max-width: 8.33333333%;
+  }
+  .flex-col@{suffix}-2 {
+    flex-basis: 16.66666667%;
+    max-width: 16.66666667%;
+  }
+  .flex-col@{suffix}-3 {
+    flex-basis: 25%;
+    max-width: 25%;
+  }
+  .flex-col@{suffix}-4 {
+    flex-basis: 33.33333333%;
+    max-width: 33.33333333%;
+  }
+  .flex-col@{suffix}-5 {
+    flex-basis: 41.66666667%;
+    max-width: 41.66666667%;
+  }
+  .flex-col@{suffix}-6 {
+    flex-basis: 50%;
+    max-width: 50%;
+  }
+  .flex-col@{suffix}-7 {
+    flex-basis: 58.33333333%;
+    max-width: 58.33333333%;
+  }
+  .flex-col@{suffix}-8 {
+    flex-basis: 66.66666667%;
+    max-width: 66.66666667%;
+  }
+  .flex-col@{suffix}-9 {
+    flex-basis: 75%;
+    max-width: 75%;
+  }
+  .flex-col@{suffix}-10 {
+    flex-basis: 83.33333333%;
+    max-width: 83.33333333%;
+  }
+  .flex-col@{suffix}-11 {
+    flex-basis: 91.66666667%;
+    max-width: 91.66666667%;
+  }
+  .flex-col@{suffix}-12 {
+    flex-basis: 100%;
+    max-width: 100%;
+  }
+}
+
+@media(min-width:@screen-xs-min) {
+  .flex-col(-xs);
+}
+@media(min-width:@screen-sm-min) {
+  .flex-col(-sm);
+}
+@media(min-width:@screen-md-min) {
+  .flex-col(-md);
+}
+@media(min-width:@screen-lg-min) {
+  .flex-col(-lg);
+}

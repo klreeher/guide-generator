@@ -1,14 +1,46 @@
-<div class="oc-docs-canvas">
-    <article id="Guidelines">
-        <header class="docs-header">
-            <i class="fa fa-map-o fa-2x"></i>
-            <span ng-if="!base.previewGuide.guideContent.guideTitle"> Preview Guide </span>
-            <span ng-if="base.previewGuide.guideContent.guideTitle" class="docs-header-breadcrumb">Guides &middot; Base Use Cases<h1>{{base.previewGuide.guideContent.guideTitle}}</h1></span>
-        </header>
-        <div class="oc-docs-content-wrap">
-            <section class="guides-section language-http">
-                <div id="insertPreview" ng-bind-html="base.previewGuide.guideContent.parsedHtml"> </div>
-            </section>
-        </div>
-    </article>
+<div class="container" ng-if="!base.previewGuide">
+    <div class="jumbotron text-center">
+        <h1><i class="fa fa-meh-o"></i></h1>
+        <p>What are you even doing? Generate a guide, ya goof!</p>
+        <small>(A preview will show up here once you do that)</small>
+    </div>
+</div>
+<div class="guide-generator-pane-wrapper" ng-if="base.previewGuide">
+    <div class="guide-generator-pane-body">
+        <aside class="guide-generator-pane-content">
+            <nav class="docs-nav" ng-if="base.previewGuide.guideContent.guideTitle">
+                <ul>
+                    <li class="chapter">
+                        Base Use Cases
+                    </li>
+                    <div>
+                        <ul>
+                            <li class="resource active"><a ng-href="#">{{base.previewGuide.guideContent.guideTitle}}</a></li>
+                        </ul>
+                        <div>
+                            <ul>
+                                <li ng-repeat="anchor in base.previewGuide.navContent.anchorTags"
+                                    class="endpoint"><a ng-href="{{'#' + anchor.tag}}">{{anchor.name}}</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </ul>
+            </nav>
+        </aside>
+    </div>
+</div>
+<div class="guide-generator-canvas-wrapper" ng-if="base.previewGuide">
+    <div class="guide-generator-canvas oc-docs-offset">
+        <article>
+            <header class="docs-header">
+                <i class="fa fa-map-o fa-2x"></i>
+                <span class="docs-header-breadcrumb">Guides &middot; Base Use Cases<h1>{{base.previewGuide.guideContent.guideTitle}}</h1></span>
+            </header>
+            <div id="Guidelines" class="oc-docs-content-wrap">
+                <section class="guides-section language-http">
+                    <div id="insertPreview" ng-bind-html="base.previewGuide.guideContent.parsedHtml"></div>
+                </section>
+            </div>
+        </article>
+    </div>
 </div>

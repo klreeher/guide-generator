@@ -1,0 +1,141 @@
+// Guides variables
+@oc-docs-content-padding: 0 (@grid-gutter-width / 2) @grid-gutter-width;
+@oc-docs-content-lg-padding: 0 (@grid-gutter-width / 2) @grid-gutter-width (@grid-gutter-width * 1.5);
+
+// Guides Layout
+.docs-header {
+  max-width: @container-desktop;
+  padding: @oc-docs-content-padding;
+  text-align: center;
+
+  i {
+    display: block;
+    margin-bottom: 15px;
+  }
+
+  span {
+    text-transform: uppercase;
+    color: @four51-dkgray;
+    font-size: 12px;
+    font-weight: 100;
+
+    h1,
+    h2{
+      text-transform: initial;
+      color: initial;
+      margin-top: 10px;
+    }
+  }
+}
+
+.oc-docs-content-wrap {
+  padding: @oc-docs-content-padding;
+
+  .inline-button-label {
+    text-transform: capitalize;
+    font-weight: bold;
+  }
+}
+
+.guides-section {
+  h2 {
+    color: @curry;
+    font-weight: 300;
+    margin-top: 0;
+    padding-top: @grid-gutter-width / 2;
+    padding-bottom: @padding-large-vertical;
+    border-bottom: 1px solid @four51-ltgray; //TODO: make a variable
+    position: relative;
+
+    > i {
+      position: absolute;
+      color: #ffffff;
+      transition: color 200ms ease-in-out; //TODO: make a variable
+      cursor: pointer;
+      margin-left: -@grid-gutter-width;
+      width: 100%;
+
+      &:hover,
+      &:focus {
+        color: @curry;
+      }
+    }
+  }
+
+  h3 {
+    font-weight:bold;
+    color:@io-blue;
+    margin-top: 0;
+    padding-top: @grid-gutter-width / 3;
+  }
+
+  figure {
+    padding: 15px; //TODO: Make a variable
+    border: 1px solid @gray-lighter;
+    border-radius: @border-radius-base;
+    margin-bottom: 15px;
+    text-align: center;
+    background-color: #FFFFFF;
+    &.oc-docs-image-outline {
+      background-color:@four51-ltgray;
+      border-color:darken(@four51-ltgray, 5);
+    }
+  }
+}
+
+.docs-pager {
+  max-width: @container-desktop;
+  padding: @grid-gutter-width 0;
+  margin: @oc-docs-content-padding;
+  border-top: 1px solid @four51-ltgray;
+  small {
+    display:block;
+  }
+}
+
+// API reference styles extended from Guides styles
+// TODO: Move these to api-reference.less without breaking them
+.content_api-docs {
+  h2 {
+    &:extend(.h1);
+    position: relative;
+
+    > i {
+      &:extend(.guides-section h2 > i all);
+    }
+  }
+
+  h3 {
+    &:extend(.h2);
+    &:extend(.guides-section h2 all);
+  }
+
+  h4 {
+    position: relative;
+
+    & > i {
+      &:extend(.guides-section h2 > i all);
+
+      &:hover,
+      &:focus {
+        color: @prince-nelson;
+      }
+    }
+  }
+}
+
+@media(min-width:@screen-md-min) {
+  .oc-docs {
+    &-content-wrap {
+      padding: @oc-docs-content-lg-padding;
+    }
+  }
+
+  .docs-header {
+    padding: @oc-docs-content-lg-padding;
+  }
+
+  .docs-pager {
+    margin: @oc-docs-content-lg-padding;
+  }
+}
