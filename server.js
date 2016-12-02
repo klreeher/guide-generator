@@ -93,7 +93,7 @@ app.get('/api/googledocs/:docID/:token', function(req, res) {
                     anchorTags:anchorTags
                 }
             }
-            res.status(200).json({ guideContent:guideContent, navContent: navContent })
+            res.status(200).json({ guideContent:guideContent, navContent: JSON.stringify(navContent) })
         }) 
     });
 })
