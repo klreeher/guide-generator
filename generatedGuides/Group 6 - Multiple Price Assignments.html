@@ -1,0 +1,61 @@
+<h2 id="introduction">Introduction</h2>
+<p>This guide will teach you how to set different prices for the same products based on different users.</p>
+<p>In B2B commerce, it is common that the same product is sold to different customers at different price points. This is often referred to as multi-channel commerce. There are many different reasons a seller may want to vary the price of a product (location, volume, relationship, contractual agreement, etc.). </p>
+<p>As an example, you may have two regions that buy the same product from you. The East region is a high volume purchaser and gets a lower price of $25/each for a product. The West region is a low volume purchaser and has an agreed price of $30/each for the same product.</p>
+<h2 id="1-create-a-product">1. Create a Product</h2>
+<p>Start by Creating one product that is sold in both the East and West region. To learn how to do this, reference <a href="https://documentation.ordercloud.io/guides/base-use-cases/create-and-assign-a-product">this guide</a>.</p>
+<pre class="language-javascript"><span class="token punctuation">{</span>
+  <span class="token string">&quot;ID&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;exampleproduct&quot;</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;Name&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;Example Product&quot;</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;Description&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;&quot;</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;QuantityMultiplier&quot;</span><span class="token punctuation">:</span> <span class="token number">1</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;ShipWeight&quot;</span><span class="token punctuation">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;ShipHeight&quot;</span><span class="token punctuation">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;ShipWidth&quot;</span><span class="token punctuation">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;ShipLength&quot;</span><span class="token punctuation">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;Active&quot;</span><span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;Type&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;Static&quot;</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;InventoryEnabled&quot;</span><span class="token punctuation">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;InventoryNotificationPoint&quot;</span><span class="token punctuation">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;VariantLevelInventory&quot;</span><span class="token punctuation">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;xp&quot;</span><span class="token punctuation">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;AllowOrderExceedInventory&quot;</span><span class="token punctuation">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;InventoryVisible&quot;</span><span class="token punctuation">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span>
+</pre><h2 id="create-two-user-groups">Create Two User Groups</h2>
+<p>Create one User Group called EastRegion, then create another User Group called WestRegion.  To learn how to do this, reference <a href="https://documentation.ordercloud.io/guides/base-use-cases/create-a-user-in-a-buyer-organization">this guide</a>.</p>
+<h2 id="create-two-price-schedules">Create Two Price Schedules</h2>
+<p>Create one price schedule at a $25.00 price point with an ID of &#x201C;PS-25&#x201D;. Create a second price schedule at a $30.00 price point with an ID of &#x201C;PS-30&#x201D;.  To learn how to do this, reference <a href="https://documentation.ordercloud.io/guides/base-use-cases/create-and-assign-price-schedule">this guide</a>.</p>
+<h2 id="make-the-assignments">Make the Assignments</h2>
+<p>Assign the product to the $25.00 price schedule and the EastRegion user group. Next, assign the same product to the $30.00 price schedule and the WestRegion user group.  See the request body example below for how this will look. To learn how to make assignments, reference <a href="https://documentation.ordercloud.io/guides/base-use-cases/make-an-assignment">this guide</a>. </p>
+<p>API Reference; <a href="https://documentation.ordercloud.io/api-reference#Products_SaveAssignment">Save Assignment</a></p>
+<pre class="language-http"><span class="token request-line"><span class="token property">POST</span> https://api.ordercloud.io/v1/products/assignments HTTP/1.1</span>
+<span class="token header-name keyword">Authentication:</span> Bearer put_access_token_here
+<span class="token header-name keyword">Content-Type:</span> application/json<span class="token application/json">
+
+
+<span class="token punctuation">{</span>
+  <span class="token string">&quot;ProductID&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;ProductXYZ&quot;</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;PriceScheduleID&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;PS-25&quot;</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;BuyerID&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;YourBuyerID&quot;</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;UserGroupID&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;EastRegion&quot;</span>
+<span class="token punctuation">}</span>
+</span></pre><pre class="language-http"><span class="token request-line"><span class="token property">POST</span> https://api.ordercloud.io/v1/products/assignments HTTP/1.1</span>
+<span class="token header-name keyword">Authentication:</span> Bearer put_access_token_here
+<span class="token header-name keyword">Content-Type:</span> application/json<span class="token application/json">
+
+
+<span class="token punctuation">{</span>
+  <span class="token string">&quot;ProductID&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;ProductXYZ&quot;</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;PriceScheduleID&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;PS-30&quot;</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;BuyerID&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;YourBuyerID&quot;</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;UserGroupID&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;WestRegion&quot;</span>
+<span class="token punctuation">}</span>
+</span></pre><h2 id="what-ifs">What Ifs</h2>
+<ul>
+<li>What if I need different prices per buyer company?  Prices schedules can be assigned at the Buyer, User Group, or User level, so you can have different prices for any of those parties. You will just need to create multiple price schedules and assign them to each desired party.</li>
+</ul>
+<ul>
+<li>What if I need more than two prices?  A product can have an unlimited number price schedules assigned to it. <h2 id="conclusion">Conclusion</h2>
+At this point, you should know how to set-up personalized pricing by associating one product with different prices for different users.</li>
+</ul>

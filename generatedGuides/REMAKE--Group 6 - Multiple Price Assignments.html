@@ -1,0 +1,121 @@
+<h2 id="introduction">Introduction</h2>
+<p>This guide will teach you how to set different prices for the same products based on different users.</p>
+<p>In B2B commerce, it is common that the same product is sold to different customers at different price points. This is often referred to as multi-channel commerce. There are many different reasons a seller may want to vary the price of a product (location, volume, relationship, contractual agreement, etc.). </p>
+<p>As an example, you may have two regions that buy the same product from you. The East region is a high volume purchaser and gets a lower price of $25/each for a product. The West region is 
+a low volume purchaser and has an agreed price of $30/each for the same product.</p>
+<h2 id="prerequisites">Prerequisites</h2>
+<ul>
+<li><a href="#">Create a Buyer Organization</a></li>
+<li><a href="#">Create a Buyer User</a></li>
+</ul>
+<h2 id="1-create-user-groups">1. Create User Groups</h2>
+<p>Start by creating a User Group called <code>eastregion</code>, then create another User Group called <code>westregion</code>:</p>
+<pre class="language-http"><span class="token request-line"><span class="token property">POST</span> https://api.ordercloud.io/buyers/{buyerID}/usergroups HTTP/1.1</span>
+<span class="token header-name keyword">Authentication:</span> Bearer put_access_token_here
+<span class="token header-name keyword">Content-Type:</span> application/json<span class="token application/json">
+
+
+<span class="token punctuation">{</span>
+  <span class="token string">&quot;ID&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;eastregion&quot;</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;Name&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;East Region&quot;</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;Description&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;&quot;</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;xp&quot;</span><span class="token punctuation">:</span> <span class="token keyword">null</span>
+<span class="token punctuation">}</span>
+</span></pre><pre class="language-http"><span class="token request-line"><span class="token property">POST</span> https://api.ordercloud.io/buyers/{buyerID}/usergroups HTTP/1.1</span>
+<span class="token header-name keyword">Authentication:</span> Bearer put_access_token_here
+<span class="token header-name keyword">Content-Type:</span> application/json<span class="token application/json">
+
+
+<span class="token punctuation">{</span>
+  <span class="token string">&quot;ID&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;westregion&quot;</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;Name&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;West Region&quot;</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;Description&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;&quot;</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;xp&quot;</span><span class="token punctuation">:</span> <span class="token keyword">null</span>
+<span class="token punctuation">}</span>
+</span></pre><h2 id="2-create-a-product">2. Create a Product</h2>
+<p>Next create the product that will be sold in both the East and West regions:</p>
+<pre class="language-http"><span class="token request-line"><span class="token property">POST</span> https://api.ordercloud.io/products HTTP/1.1</span>
+<span class="token header-name keyword">Authentication:</span> Bearer put_access_token_here
+<span class="token header-name keyword">Content-Type:</span> application/json<span class="token application/json">
+
+
+<span class="token punctuation">{</span>
+  <span class="token string">&quot;ID&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;exampleproduct&quot;</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;Name&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;Example Product&quot;</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;Description&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;&quot;</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;QuantityMultiplier&quot;</span><span class="token punctuation">:</span> <span class="token number">1</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;ShipWeight&quot;</span><span class="token punctuation">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;ShipHeight&quot;</span><span class="token punctuation">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;ShipWidth&quot;</span><span class="token punctuation">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;ShipLength&quot;</span><span class="token punctuation">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;Active&quot;</span><span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;Type&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;Static&quot;</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;InventoryEnabled&quot;</span><span class="token punctuation">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;InventoryNotificationPoint&quot;</span><span class="token punctuation">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;VariantLevelInventory&quot;</span><span class="token punctuation">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;xp&quot;</span><span class="token punctuation">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;AllowOrderExceedInventory&quot;</span><span class="token punctuation">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;InventoryVisible&quot;</span><span class="token punctuation">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span>
+</span></pre><h2 id="3-create-two-price-schedules">3. Create Two Price Schedules</h2>
+<p>Once the product is created, we can create our Price Schedules with price points of $25 and $30: </p>
+<pre class="language-http"><span class="token request-line"><span class="token property">POST</span> https://api.ordercloud.io/priceschedules HTTP/1.1</span>
+<span class="token header-name keyword">Authentication:</span> Bearer put_access_token_here
+<span class="token header-name keyword">Content-Type:</span> application/json<span class="token application/json">
+
+
+<span class="token punctuation">{</span>
+  <span class="token string">&quot;ID&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;PS-25&quot;</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;Name&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;Price Schedule $25&quot;</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;PriceBreaks&quot;</span><span class="token punctuation">:</span> <span class="token punctuation">[</span>
+    <span class="token punctuation">{</span>
+      <span class="token string">&quot;Quantity&quot;</span><span class="token punctuation">:</span> <span class="token number">1</span><span class="token punctuation">,</span>
+      <span class="token string">&quot;Price&quot;</span><span class="token punctuation">:</span> <span class="token number">25.0</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">]</span>
+<span class="token punctuation">}</span>
+</span></pre><pre class="language-http"><span class="token request-line"><span class="token property">POST</span> https://api.ordercloud.io/priceschedules HTTP/1.1</span>
+<span class="token header-name keyword">Authentication:</span> Bearer put_access_token_here
+<span class="token header-name keyword">Content-Type:</span> application/json<span class="token application/json">
+
+
+<span class="token punctuation">{</span>
+  <span class="token string">&quot;ID&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;PS-30&quot;</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;Name&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;Price Schedule $30&quot;</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;PriceBreaks&quot;</span><span class="token punctuation">:</span> <span class="token punctuation">[</span>
+    <span class="token punctuation">{</span>
+      <span class="token string">&quot;Quantity&quot;</span><span class="token punctuation">:</span> <span class="token number">1</span><span class="token punctuation">,</span>
+      <span class="token string">&quot;Price&quot;</span><span class="token punctuation">:</span> <span class="token number">30.0</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">]</span>
+<span class="token punctuation">}</span>
+</span></pre><h2 id="4-make-the-assignments">4. Make the Assignments</h2>
+<p>We can now assign the product to the corresponding Price Schedules based on the proper user groups. Start by assigning the product to the $25 Price Schedule and the <code>eastregion</code> user group. Then assign the same product to the $30 Price Schedule and the <code>westregion</code> user group:</p>
+<p>API Reference: <a href="https://documentation.ordercloud.io/api-reference#Products_SaveAssignment">Save Assignment</a></p>
+<pre class="language-http"><span class="token request-line"><span class="token property">POST</span> https://api.ordercloud.io/v1/products/assignments HTTP/1.1</span>
+<span class="token header-name keyword">Authentication:</span> Bearer put_access_token_here
+<span class="token header-name keyword">Content-Type:</span> application/json<span class="token application/json">
+
+
+<span class="token punctuation">{</span>
+  <span class="token string">&quot;ProductID&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;exampleproduct&quot;</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;PriceScheduleID&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;ps-25&quot;</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;BuyerID&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;test&quot;</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;UserGroupID&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;eastregion&quot;</span>
+<span class="token punctuation">}</span>
+</span></pre><pre class="language-http"><span class="token request-line"><span class="token property">POST</span> https://api.ordercloud.io/v1/products/assignments HTTP/1.1</span>
+<span class="token header-name keyword">Authentication:</span> Bearer put_access_token_here
+<span class="token header-name keyword">Content-Type:</span> application/json<span class="token application/json">
+
+
+<span class="token punctuation">{</span>
+  <span class="token string">&quot;ProductID&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;exampleproduct&quot;</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;PriceScheduleID&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;ps-30&quot;</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;BuyerID&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;test&quot;</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;UserGroupID&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;westregion&quot;</span>
+<span class="token punctuation">}</span>
+</span></pre><h2 id="what-ifs">What Ifs</h2>
+<p><strong>What if I need more than two prices?</strong><br>A product can have an unlimited number Price Schedules assigned to it. </p>
+<p><strong>What if I need different prices for each buyer organization?</strong><br>Price Schedules can be assigned at the Buyer, User Group, or User level, so you can have different prices for any of those parties. You will just need to create multiple Price Schedules and assign them to each desired party. To learn more about assignments, check out the <a href="#">Make Assignment**</a> guide.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>At this point, you should know how to set-up personalized pricing by associating one product with different prices for different users.</p>

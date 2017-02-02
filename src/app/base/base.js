@@ -107,7 +107,7 @@ function BaseConfig($stateProvider, $injector) {
     $stateProvider.state('base', baseState);
 }
 
-function BaseController($rootScope, $sce,  $element, $ocMedia, Underscore, snapRemote, defaultErrorMessageResolver, CurrentUser, ComponentList, base, $window, googleDocs, toastr, $state, $timeout, $compile, $templateCache, $scope) {
+function BaseController($rootScope, $sce, $q, $element, $ocMedia, Underscore, snapRemote, defaultErrorMessageResolver, CurrentUser, ComponentList, base, $window, googleDocs, toastr, $state, $timeout, $compile, $templateCache, $scope) {
     var vm = this;
     vm.left = base.left;
     vm.right = base.right;
@@ -117,30 +117,81 @@ function BaseController($rootScope, $sce,  $element, $ocMedia, Underscore, snapR
     vm.registrationAvailable = Underscore.filter(vm.organizationItems, function(item) {
         return item.StateRef == 'registration'
     }).length;
+
+    vm.fileList;
     vm.previewGuide;
+    vm.folderURL = 'https://drive.google.com/drive/folders/0B9eFq4Wl332GbV9wRTdjTTFWOU0';
 
     // Your Client ID can be retrieved from your project in the google
     // Developer Console, https://console.developers.google.com
     var CLIENT_ID = '357254235618-0rk836rghajrgnqvi5pjo8nko2og3l3c.apps.googleusercontent.com';
     var SCOPES = ['https://www.googleapis.com/auth/drive.readonly'];
     vm.generateGuide = function() {
-        $window.gapi.auth.authorize({
+        var accessToken = googleDocs.getToken();
+        if(accessToken){
+            callApi(accessToken)
+        } else {
+            $window.gapi.auth.authorize({
                 client_id: CLIENT_ID,
                 scope: SCOPES,
                 immediate: false
             })
-            .then(function(auth) {
-                console.log('access token: ' + auth.access_token)
-                googleDocs.getGuide(vm.docsURL, auth.access_token)
-                    .then(function(data) {
-                        var snapshot = angular.copy(data);
-                        console.log(snapshot);
-                        data.guideContent.parsedHtml = $sce.trustAsHtml(data.guideContent.parsedHtml);
-                        vm.previewGuide = data;
-                        $state.go('preview');
-                    })
+            .then(function(auth){
+                googleDocs.setToken(auth.access_token);
+                callApi(auth.access_token);
+            });
+        }
+
+        function callApi(token){
+            console.log('access token: ' + token);
+            var docID = vm.docsURL.replace('https://', '').split('/')[3];
+            return googleDocs.getGuide(docID, token)
+                .then(function(data) {
+                    var snapshot = angular.copy(data);
+                    console.log(snapshot);
+                    data.guideContent.parsedHtml = $sce.trustAsHtml(data.guideContent.parsedHtml);
+                    vm.previewGuide = data;
+                    $state.go('preview');
+                });
+        }
+    };
+
+    vm.getAllGuides = function(){
+        var accessToken = googleDocs.getToken();
+        if(accessToken) {
+            callApi();
+        } else {
+            $window.gapi.auth.authorize({
+                client_id: CLIENT_ID,
+                scope: SCOPES,
+                immediate: false
             })
-    }
+            .then(function(auth){
+                googleDocs.setToken(auth.access_token);
+                callApi(auth.access_token);
+            });
+        }
+
+        function callApi(token){
+            console.log('access token: ' + token);
+            var folderID = vm.folderURL.replace('https://', '').split('/')[3];
+            return googleDocs.listGuideIDs(folderID, token)
+                .then(function(data) {
+                    console.log(data);
+                    var queue = [];
+                    vm.fileList = data.files;
+                    Underscore.each(data.files, function(guide){
+                        //timeout needed so that we don't hit rate limit for  google docs api
+                        queue.push($timeout(googleDocs.getGuide(guide.id, token), 1000));
+                    });
+                    return $q.all(queue)
+                        .then(function(){
+                            toastr.success('Check the generatedGuides folder in your project directory', 'Success');
+                        });
+                });
+        }
+    };
+
 
     defaultErrorMessageResolver.getErrorMessages().then(function(errorMessages) {
         errorMessages['customPassword'] = 'Password must be at least eight characters long and include at least one letter and one number';

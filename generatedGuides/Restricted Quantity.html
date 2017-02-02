@@ -1,0 +1,83 @@
+<h2 id="introduction">Introduction</h2>
+<p>This guide will teach you how to restrict product quantity to pre-designated amounts. This may apply to sellers who package products in specific quantities. Sellers are able to create as few or as many quantity restrictions as they desire; for example, you may want to limit the number of business cards a user can purchase to sets of 100, 250, or 500.</p>
+<p>The Price Schedule is the relationship between a product and the party (user, user group, or  buyer) via a product assignment, therefore you will first need to define a product.</p>
+<p>This example features Price Breaks based on the quantity of business cards ordered. If you are interested in learning more about Price Breaks, refer to the <a href="&lt;link to price breaks guide&gt;">Price Breaks<em>*</em></a> Use Case Guide.</p>
+<h2 id="prerequisites">Prerequisites</h2>
+<ul>
+<li><a href="https://documentation.ordercloud.io/guides/base-use-cases/create-a-user-in-a-buyer-organization">Create a User in a Buyer Organization</a></li>
+</ul>
+<h2 id="1-create-a-product">1. Create A Product</h2>
+<p>API Reference: <a href="https://documentation.ordercloud.io/api-reference#Products_Create">Create New Product</a></p>
+<pre class="language-http"><span class="token request-line"><span class="token property">POST</span> https://api.ordercloud.io/v1/products HTTP/1.1</span>
+<span class="token header-name keyword">Authentication:</span> Bearer put_access_token_here
+<span class="token header-name keyword">Content-Type:</span> application/json<span class="token application/json">
+
+
+<span class="token punctuation">{</span>
+  <span class="token string">&quot;ID&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;business-card-ID&quot;</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;Name&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;Business Cards&quot;</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;Description&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;&quot;</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;QuantityMultiplier&quot;</span><span class="token punctuation">:</span> <span class="token number">1</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;ShipWeight&quot;</span><span class="token punctuation">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;ShipHeight&quot;</span><span class="token punctuation">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;ShipWidth&quot;</span><span class="token punctuation">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;ShipLength&quot;</span><span class="token punctuation">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;Active&quot;</span><span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;Type&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;Static&quot;</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;InventoryEnabled&quot;</span><span class="token punctuation">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;InventoryNotificationPoint&quot;</span><span class="token punctuation">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;VariantLevelInventory&quot;</span><span class="token punctuation">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;xp&quot;</span><span class="token punctuation">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;AllowOrderExceedInventory&quot;</span><span class="token punctuation">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;InventoryVisible&quot;</span><span class="token punctuation">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span>
+</span></pre><h2 id="2-create-a-price-schedule">2. Create A Price Schedule</h2>
+<p>Next, we assign a Price Schedule to the product. In order to achieve a Restricted Quantity, we must declare <code>&quot;RestrictedQuantity&quot;: true</code>. This enables the restriction of whichever quantities we specify.</p>
+<p>API Reference: <a href="https://documentation.ordercloud.io/api-reference#PriceSchedules_Create">Create Price Schedule</a></p>
+<pre class="language-http"><span class="token request-line"><span class="token property">POST</span> https://api.ordercloud.io/v1/priceschedules HTTP/1.1</span>
+<span class="token header-name keyword">Authentication:</span> Bearer put_access_token_here
+<span class="token header-name keyword">Content-Type:</span> application/json<span class="token application/json">
+
+
+<span class="token punctuation">{</span>
+   <span class="token string">&quot;ID&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;business-card-restricted-ID&quot;</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;Name&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;Business Card Restricted&quot;</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;MaxQuantity&quot;</span><span class="token punctuation">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;UseCumulativeQuantity&quot;</span><span class="token punctuation">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;RestrictedQuantity&quot;</span><span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;OrderType&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;Standard&quot;</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;PriceBreaks&quot;</span><span class="token punctuation">:</span> <span class="token punctuation">[</span>
+    <span class="token punctuation">{</span>
+      <span class="token string">&quot;Quantity&quot;</span><span class="token punctuation">:</span> <span class="token number">100</span><span class="token punctuation">,</span>
+      <span class="token string">&quot;Price&quot;</span><span class="token punctuation">:</span> <span class="token number">1</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token punctuation">{</span>
+      <span class="token string">&quot;Quantity&quot;</span><span class="token punctuation">:</span> <span class="token number">250</span><span class="token punctuation">,</span>
+      <span class="token string">&quot;Price&quot;</span><span class="token punctuation">:</span> <span class="token punctuation">.</span><span class="token number">9</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+        <span class="token punctuation">{</span>
+      <span class="token string">&quot;Quantity&quot;</span><span class="token punctuation">:</span> <span class="token number">500</span><span class="token punctuation">,</span>
+      <span class="token string">&quot;Price&quot;</span><span class="token punctuation">:</span> <span class="token punctuation">.</span><span class="token number">81</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">]</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;xp&quot;</span><span class="token punctuation">:</span> <span class="token keyword">null</span>
+<span class="token punctuation">}</span>
+</span></pre><p>Note: We added three unique <code>PriceBreaks</code>, however you can add as many as you desire. The <code>Price</code> for each <code>Quantity</code> is the per unit price of the product. When we set <code>RestrictedQuantity</code> to <code>true</code>, the user must select only from the quantities specified.</p>
+<h2 id="3-create-assignment-between-party-product-and-price-schedule">3. Create Assignment Between Party, Product, and Price Schedule</h2>
+<p>This final assignment will assign the Price Schedule to a specific party. In our example, we are assigning this product to a user group (read <a href="https://documentation.ordercloud.io/guides/base-use-cases/create-a-user-in-a-buye
+r-organization">Create a User in a Buyer Organization</a>).</p>
+<p>[insert restricted_quantity_PPP.jpg SHOULD BE HERE]</p>
+<p>API Reference: <a href="https://documentation.ordercloud.io/api-reference#Products_SaveAssignment">Save Assignment</a></p>
+<pre class="language-http"><span class="token request-line"><span class="token property">POST</span> https://api.ordercloud.io/v1/product/assignements HTTP/1.1</span>
+<span class="token header-name keyword">Authentication:</span> Bearer put_access_token_here
+<span class="token header-name keyword">Content-Type:</span> application/json<span class="token application/json">
+
+
+<span class="token punctuation">{</span>
+  <span class="token string">&quot;ProductID&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;business-card-ID&quot;</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;PriceScheduleID&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;business-card-restricted-ID&quot;</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;BuyerID&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;ordercloudio&quot;</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;UserGroupID&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;business-card-group&quot;</span>
+<span class="token punctuation">}</span>
+</span></pre><h2 id="conclusion">Conclusion</h2>
+<p>You should now be able to create products with a restricted quantity as well as understand the relationship between a product, party, and price schedule.</p>

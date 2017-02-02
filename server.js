@@ -1,13 +1,21 @@
 'use strict';
 var config = require('./gulp.config');
 
+/*
+    manage api key - https://console.developers.google.com
+    google drive api - https://developers.google.com/drive/v3/reference/
+    list files query docs- https://developers.google.com/drive/v3/web/search-parameters
+    cheerio reference - https://github.com/cheeriojs/cheerio/blob/master/Readme.md
+
+
+*/
+
 var express = require('express'),
     env = process.env.NODE_ENV = process.env.NODE_ENV || 'dev',
     app = express(),
     port = process.env.PORT || 451;
 
-var mongoose = require('mongoose'), //mongoose for mongo db
-    bodyParser = require('body-parser'), //parses html body
+var bodyParser = require('body-parser'), //parses html body
     request = require('request'), //make authenticated http requests
     fs = require('fs'), //internal file system, enables saving files
     cheerio = require('cheerio'), //jquery-like functions to filter response bodies
@@ -19,7 +27,6 @@ var mongoose = require('mongoose'), //mongoose for mongo db
 require('prismjs/components/prism-http');
 
 // configuration ==============================
-mongoose.connect('mongodb://cramirez:fails345@ds017256.mlab.com:17256/cat-feeder'); //connect to mongoDB database
 app.use(bodyParser.urlencoded({
     'extended': 'true'
 })); // parse application/x-www-form-urlencoded
@@ -27,6 +34,29 @@ app.use(bodyParser.json()); //parse application/json
 app.use(bodyParser.json({
     type: 'application/vnd.api+json'
 })); //parse application/vnd.api+json as json
+
+app.get('/api/googledocs-folder/:folderID/:token', function(req, res){
+    var getFolderContentUrl = "https://www.googleapis.com/drive/v3/files/?q='" + req.params.folderID + "'+in+parents";
+    var requestBody = {
+        url: getFolderContentUrl,
+        headers: {
+            'Content-Type': 'text/html',
+            'Authorization': 'Bearer ' + req.params.token
+        }
+    };
+    request(requestBody, function(error, response, json){
+        if(error){
+            console.log('There was an error', error);
+            res.send('There was an error retrieving files');
+        } else {
+            fs.writeFile('output.json', json, function(err){
+                console.log('File Successfully Written - check your project directory for the output.json file');
+            });
+            res.send(json);
+        }
+    });
+
+});
 
 // scraping endpoint =========================
 app.get('/api/googledocs/:docID/:token', function(req, res) {
@@ -38,14 +68,14 @@ app.get('/api/googledocs/:docID/:token', function(req, res) {
             'Content-Type': 'text/html',
             'Authorization': 'Bearer ' + req.params.token
         }
-    }
+    };
     var getGuideTitle = {
         url: getGuideTitleUrl,
         headers: {
             'Content-Type': 'text/html',
             'Authorization': 'Bearer ' + req.params.token
         }
-    }
+    };
     var parsedHtml;
     request(getHTML, function(error, response, html) {
         if (error) {
@@ -62,7 +92,7 @@ app.get('/api/googledocs/:docID/:token', function(req, res) {
                     $(this).addClass('language-http');
                 }
                 else{
-                    var codeToHighlight = $(this).text();
+                    codeToHighlight = $(this).text();
                     var jsCode = Prism.highlight(codeToHighlight, Prism.languages.javascript);
                     $(this).html(jsCode);
                     $(this).addClass('language-javascript');
@@ -72,8 +102,9 @@ app.get('/api/googledocs/:docID/:token', function(req, res) {
                 var name = $(this).text();
                 var tag = $(this).attr('id');
                 anchorTags.push({name:name, tag:tag})
-            })
-            parsedHtml = $.html()
+            });
+
+            parsedHtml = $.html();
         }
         request(getGuideTitle, function(error, response, html){
             if(error){
@@ -82,21 +113,26 @@ app.get('/api/googledocs/:docID/:token', function(req, res) {
             } else{
                 var guideTitle = JSON.parse(html).name;
                 var guideID = guideTitle.toLowerCase().replace(/ /g, '-');
-                
                 var guideContent = {
                     guideTitle:guideTitle,
                     parsedHtml:parsedHtml
-                }
+                };
                 var navContent = {
-                    name:guideTitle, chapter:'Base Use Cases', 
-                    stateLink:{name:'guides',params:{sectionID:'base-use-cases', guideID:guideID}},
+                    //TODO: make chapter name more dynamic
+                    name:guideTitle, chapter:'Product Catalog Management', 
+                    stateLink:{name:'use-case-guides.content', params:{sectionID:'product-catalog-management', guideID:guideID}},
                     anchorTags:anchorTags
-                }
+                };
             }
+            fs.writeFile('generatedGuides/' + guideTitle + '.html', parsedHtml, function(err){
+                console.log(guideTitle);
+            });
+            fs.appendFile('navContent.json', JSON.stringify(navContent), function(err){});
+            fs.appendFile('navContent.json', ',', function(err){});
             res.status(200).json({ guideContent:guideContent, navContent: JSON.stringify(navContent) })
-        }) 
+        });
     });
-})
+});
 
 switch (env) {
     case 'production':

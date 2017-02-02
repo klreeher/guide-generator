@@ -10,9 +10,21 @@
                     <form>
                         <div class="form-group">
                             <input type="text" ng-model="base.docsURL" placeholder="Paste Google Docs Link here" class="form-control"><br>
-                        <button class="btn btn-primary btn-large" ng-click="base.generateGuide()" ng-disabled="!base.docsURL" class="form-control">Generate Guide</button>
+                        <button class="btn btn-primary btn-large" ng-click="base.generateGuide()" ng-disabled="!base.docsURL" class="form-control">Generate and Preview a Single Guide</button>
                         </div>
                     </form>
+                    <form>
+                        <div class="form-group">
+                            <input type="text" ng-model="base.folderURL" placeholder="Paste link to Google Docs folder here" class="form-control"><br>
+                            <button class="btn btn-primary btn-large" ng-click="base.getAllGuides()" ng-disabled="!base.folderURL" class="form-control">Generate All Guides (no preview)</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-lg-8" ng-if="base.fileList">
+                    Guides in this folder:
+                    <ul>
+                        <li ng-repeat="guide in base.fileList">{{guide.name}}</li>
+                    </ul>
                 </div>
             </div>
         </div>

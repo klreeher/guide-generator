@@ -2,12 +2,29 @@ angular.module('orderCloud')
     .factory('googleDocs', googleDocs)
 
 function googleDocs($resource){
+    var apiKey = null;
     var service = {
-        getGuide:getGuide
+        getToken: _getToken,
+        setToken: _setToken,
+        getGuide: _getGuide,
+        listGuideIDs: _listGuideIDs
+    };
+
+    function _getToken(){
+        return apiKey;
     }
-    function getGuide(url, token){
-        var docID = url.replace('https://', '').split('/')[3];
-        return $resource('https://guideproducer.herokuapp.com/api/googledocs/' + docID + '/' + token).get().$promise;
+
+    function _setToken(key){
+        apiKey = key;
     }
+
+    function _getGuide(docID, token){
+        return $resource('http://localhost:3000/api/googledocs/' + docID + '/' + token).get().$promise;
+    }
+    function _listGuideIDs(folderID, token){
+        //retrieves list of guides from a folder
+        return $resource('http://localhost:3000/api/googledocs-folder/' + folderID + '/' + token).get().$promise;
+    }
+
     return service;
 }

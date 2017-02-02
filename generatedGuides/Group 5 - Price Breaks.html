@@ -1,0 +1,71 @@
+<h2 id="introduction">Introduction</h2>
+<p>This guide will teach you how to configure a Price Schedule with Price Breaks that will provide a discount at greater quantities. Specifically, this example will show how to configure a 10% discount for every 100 units ordered.</p>
+<p>It is a common practice to offer a financial incentive to buyer users that purchase goods in multiple units or in large quantities. Within OrderCloud.io, <code>Price Breaks</code> allow you to control the unit price of an item based on quantity ordered by a user. The <code>Price</code> is based on the <code>Quantity</code>.  For example a <code>Price Break</code> with a <code>Quantity</code> of 100 and a <code>Price</code> of $10 would result in a line total of $1,000 when a user orders a <code>Quantity</code> of 100 of these items.</p>
+<h2 id="prerequisites">Prerequisites</h2>
+<ul>
+<li><a href="https://documentation.ordercloud.io/guides/base-use-cases/create-and-assign-price-schedule">Create and Assign Price Schedule</a></li>
+</ul>
+<h2 id="1-create-price-breaks-within-a-price-schedule">1. Create Price Breaks within a Price Schedule</h2>
+<p>The example below will show the structure needed to create Price Breaks that will produce a 10% reduction in <code>Price</code> for every 100 units ordered.</p>
+<p>While Price Breaks can be created individually using the
+API Reference: <a href="https://documentation.ordercloud.io/api-reference#PriceSchedules_SavePriceBreak">Save Price Break</a> endpoint, this example uses the API Reference: <a href="https://documentation.ordercloud.io/api-reference#PriceSchedules_Create">Create a Price Schedule</a> endpoint.</p>
+<pre class="language-http"><span class="token request-line"><span class="token property">POST</span> https://api.ordercloud.io/v1/priceschedules HTTP/1.1</span>
+<span class="token header-name keyword">Authentication:</span> Bearer put_access_token_here
+<span class="token header-name keyword">Content-Type:</span> application/json<span class="token application/json">
+
+
+<span class="token punctuation">{</span>
+  <span class="token string">&quot;ID&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;ExamplePriceSchedule&quot;</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;Name&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;Example Price Schedule&quot;</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;ApplyTax&quot;</span><span class="token punctuation">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;ApplyShipping&quot;</span><span class="token punctuation">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;MaxQuantity&quot;</span><span class="token punctuation">:</span> <span class="token number">1000</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;UseCumulativeQuantity&quot;</span><span class="token punctuation">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;RestrictedQuantity&quot;</span><span class="token punctuation">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;OrderType&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;Standard&quot;</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;PriceBreaks&quot;</span><span class="token punctuation">:</span> <span class="token punctuation">[</span>
+    <span class="token punctuation">{</span>
+      <span class="token string">&quot;Quantity&quot;</span><span class="token punctuation">:</span> <span class="token number">100</span><span class="token punctuation">,</span>
+      <span class="token string">&quot;Price&quot;</span><span class="token punctuation">:</span> <span class="token number">10.00</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span>
+      <span class="token string">&quot;Quantity&quot;</span><span class="token punctuation">:</span> <span class="token number">200</span><span class="token punctuation">,</span>
+      <span class="token string">&quot;Price&quot;</span><span class="token punctuation">:</span> <span class="token number">9.00</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span>
+      <span class="token string">&quot;Quantity&quot;</span><span class="token punctuation">:</span> <span class="token number">300</span><span class="token punctuation">,</span>
+      <span class="token string">&quot;Price&quot;</span><span class="token punctuation">:</span> <span class="token number">8.10</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span>
+      <span class="token string">&quot;Quantity&quot;</span><span class="token punctuation">:</span> <span class="token number">400</span><span class="token punctuation">,</span>
+      <span class="token string">&quot;Price&quot;</span><span class="token punctuation">:</span> <span class="token number">72.9</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span>
+      <span class="token string">&quot;Quantity&quot;</span><span class="token punctuation">:</span> <span class="token number">500</span><span class="token punctuation">,</span>
+      <span class="token string">&quot;Price&quot;</span><span class="token punctuation">:</span> <span class="token number">6.56</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span>
+      <span class="token string">&quot;Quantity&quot;</span><span class="token punctuation">:</span> <span class="token number">600</span><span class="token punctuation">,</span>
+      <span class="token string">&quot;Price&quot;</span><span class="token punctuation">:</span> <span class="token number">5.90</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span>
+      <span class="token string">&quot;Quantity&quot;</span><span class="token punctuation">:</span> <span class="token number">700</span><span class="token punctuation">,</span>
+      <span class="token string">&quot;Price&quot;</span><span class="token punctuation">:</span> <span class="token number">5.31</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span>
+      <span class="token string">&quot;Quantity&quot;</span><span class="token punctuation">:</span> <span class="token number">800</span><span class="token punctuation">,</span>
+      <span class="token string">&quot;Price&quot;</span><span class="token punctuation">:</span> <span class="token number">4.78</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span>
+      <span class="token string">&quot;Quantity&quot;</span><span class="token punctuation">:</span> <span class="token number">900</span><span class="token punctuation">,</span>
+      <span class="token string">&quot;Price&quot;</span><span class="token punctuation">:</span> <span class="token number">4.30</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token punctuation">{</span>
+      <span class="token string">&quot;Quantity&quot;</span><span class="token punctuation">:</span> <span class="token number">1000</span><span class="token punctuation">,</span>
+      <span class="token string">&quot;Price&quot;</span><span class="token punctuation">:</span> <span class="token number">3.87</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">]</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;xp&quot;</span><span class="token punctuation">:</span> <span class="token keyword">null</span>
+<span class="token punctuation">}</span>
+</span></pre><h2 id="conclusion">Conclusion</h2>
+<p>You should now be able to fully customize your Price Schedules to include Price Breaks. If you are interested in setting restricted quantities, check out the <a href="#">ADD URL Restrictive Quantities</a> guide.</p>
