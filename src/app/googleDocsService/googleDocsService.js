@@ -18,8 +18,8 @@ function googleDocs($resource){
         apiKey = key;
     }
 
-    function _getGuide(docID, token){
-        return $resource('http://localhost:3000/api/googledocs/' + docID + '/' + token).get().$promise;
+    function _getGuide(docID, token, guideChapter){
+        return $resource('http://localhost:3000/api/googledocs/' + docID + '/' + token + '/' + guideChapter).get().$promise;
     }
     function _listGuideIDs(folderID, token){
         //retrieves list of guides from a folder

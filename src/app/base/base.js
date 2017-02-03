@@ -107,7 +107,7 @@ function BaseConfig($stateProvider, $injector) {
     $stateProvider.state('base', baseState);
 }
 
-function BaseController($rootScope, $sce, $q, $element, $ocMedia, Underscore, snapRemote, defaultErrorMessageResolver, CurrentUser, ComponentList, base, $window, googleDocs, toastr, $state, $timeout, $compile, $templateCache, $scope) {
+function BaseController($rootScope, $sce, $q, $element, $ocMedia, Underscore, snapRemote, defaultErrorMessageResolver, CurrentUser, ComponentList, base, $window, googleDocs, toastr, $state, $timeout, $compile, $templateCache, $interval) {
     var vm = this;
     vm.left = base.left;
     vm.right = base.right;
@@ -119,6 +119,11 @@ function BaseController($rootScope, $sce, $q, $element, $ocMedia, Underscore, sn
     }).length;
 
     vm.fileList;
+    vm.availableChapters = [
+        {id:'product-catalog-management', name: 'Product Catalog management'}, 
+        {id:'buyer-and-seller-organization-management', name: 'Buyer and Seller Organization Management'},
+        {id: 'order-management', name: 'Order Management'}];
+    vm.guideChapter = vm.availableChapters[0].id;
     vm.previewGuide;
     vm.folderURL = 'https://drive.google.com/drive/folders/0B9eFq4Wl332GbV9wRTdjTTFWOU0';
 
@@ -145,7 +150,7 @@ function BaseController($rootScope, $sce, $q, $element, $ocMedia, Underscore, sn
         function callApi(token){
             console.log('access token: ' + token);
             var docID = vm.docsURL.replace('https://', '').split('/')[3];
-            return googleDocs.getGuide(docID, token)
+            return googleDocs.getGuide(docID, token, vm.guideChapter)
                 .then(function(data) {
                     var snapshot = angular.copy(data);
                     console.log(snapshot);
@@ -175,19 +180,27 @@ function BaseController($rootScope, $sce, $q, $element, $ocMedia, Underscore, sn
         function callApi(token){
             console.log('access token: ' + token);
             var folderID = vm.folderURL.replace('https://', '').split('/')[3];
-            return googleDocs.listGuideIDs(folderID, token)
+            googleDocs.listGuideIDs(folderID, token)
                 .then(function(data) {
-                    console.log(data);
-                    var queue = [];
-                    vm.fileList = data.files;
-                    Underscore.each(data.files, function(guide){
-                        //timeout needed so that we don't hit rate limit for  google docs api
-                        queue.push($timeout(googleDocs.getGuide(guide.id, token), 1000));
-                    });
-                    return $q.all(queue)
-                        .then(function(){
-                            toastr.success('Check the generatedGuides folder in your project directory', 'Success');
-                        });
+                    vm.totalFiles = angular.copy(data.files.length);
+                    vm.fileList = [];
+                    var queue = data.files;
+                    
+                    //Need to limit rate that guides are retrieved to avoid ratee limit
+                    function getGuides(){
+                        return googleDocs.getGuide(queue[0].id, token, vm.guideChapter)
+                            .then(function(){
+                                vm.fileList.push(queue[0]);
+                                queue.shift();
+                                if(queue.length){
+                                    $timeout(getGuides, 500);
+                                } else {
+                                    var guideCount = vm.fileList.length;
+                                    toastr.success('All ' + guideCount +  ' guides have been generated!', 'Success');
+                                }
+                            });
+                    }
+                    getGuides();
                 });
         }
     };

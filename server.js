@@ -59,7 +59,7 @@ app.get('/api/googledocs-folder/:folderID/:token', function(req, res){
 });
 
 // scraping endpoint =========================
-app.get('/api/googledocs/:docID/:token', function(req, res) {
+app.get('/api/googledocs/:docID/:token/:chapter', function(req, res) {
     var getGuideContentUrl = 'https://www.googleapis.com/drive/v3/files/' + req.params.docID + '/export?mimeType=text/plain';
     var getGuideTitleUrl = 'https://www.googleapis.com/drive/v3/files/' + req.params.docID;
     var getHTML = {
@@ -107,9 +107,10 @@ app.get('/api/googledocs/:docID/:token', function(req, res) {
             parsedHtml = $.html();
         }
         request(getGuideTitle, function(error, response, html){
-            if(error){
+            if(html.error){
                 console.log('There was an error', error);
-                res.send('There was an error parsing your guide');
+                console.log(html);
+                console.log('*****************************************\n*****************************************');
             } else{
                 var guideTitle = JSON.parse(html).name;
                 var guideID = guideTitle.toLowerCase().replace(/ /g, '-');
@@ -117,19 +118,30 @@ app.get('/api/googledocs/:docID/:token', function(req, res) {
                     guideTitle:guideTitle,
                     parsedHtml:parsedHtml
                 };
+
+                var chapterMapping = {};
+                chapterMapping['product-catalog-management'] = 'Product Catalog Management';
+                chapterMapping['buyer-and-seller-organization-management'] = 'Buyer and Seller Organization Management';
+                chapterMapping['order-management'] = 'Order Management';
+
                 var navContent = {
-                    //TODO: make chapter name more dynamic
-                    name:guideTitle, chapter:'Product Catalog Management', 
-                    stateLink:{name:'use-case-guides.content', params:{sectionID:'product-catalog-management', guideID:guideID}},
+                    name:guideTitle, chapter: chapterMapping[req.params.chapter], 
+                    stateLink:{name:'use-case-guides.content', params:{sectionID: req.params.chapter, guideID:guideID}},
                     anchorTags:anchorTags
                 };
             }
-            fs.writeFile('generatedGuides/' + guideTitle + '.html', parsedHtml, function(err){
-                console.log(guideTitle);
+            fs.writeFile('generatedGuides/' + guideTitle + '.html', '<div class="oc-docs-content-wrap">', function(err){
+                if(!err){
+                    fs.appendFile('generatedGuides/' + guideTitle + '.html', parsedHtml, function(err2){
+                        if(!err2){
+                             fs.appendFile('generatedGuides/' + guideTitle + '.html', '</div>', function(){});
+                        }
+                    });
+                }
             });
-            fs.appendFile('navContent.json', JSON.stringify(navContent), function(err){});
-            fs.appendFile('navContent.json', ',', function(err){});
-            res.status(200).json({ guideContent:guideContent, navContent: JSON.stringify(navContent) })
+            fs.appendFile('generatedGuides/navContent.json', JSON.stringify(navContent), function(){});
+            fs.appendFile('generatedGuides/navContent.json', ',', function(){});
+            res.status(200).json({ guideContent:guideContent, navContent: JSON.stringify(navContent) });
         });
     });
 });
