@@ -130,11 +130,11 @@ app.get('/api/googledocs/:docID/:token/:chapter', function(req, res) {
                     anchorTags:anchorTags
                 };
             }
-            fs.writeFile('generatedGuides/' + guideTitle + '.html', '<div class="oc-docs-content-wrap">', function(err){
+            fs.writeFile('generatedGuides/' + guideTitle + '.html', '<div class="oc-docs-content-wrap"><section class="guides-section">', function(err){
                 if(!err){
                     fs.appendFile('generatedGuides/' + guideTitle + '.html', parsedHtml, function(err2){
                         if(!err2){
-                             fs.appendFile('generatedGuides/' + guideTitle + '.html', '</div>', function(){});
+                             fs.appendFile('generatedGuides/' + guideTitle + '.html', '</section></div>', function(){});
                         }
                     });
                 }
