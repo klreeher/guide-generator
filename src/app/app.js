@@ -47,7 +47,7 @@ function ErrorHandling($provide) {
     }
 }
 
-function AppCtrl($q, $rootScope, $state, toastr, LoginService, appname, anonymous) {
+function AppCtrl($q, $rootScope, googleDocs, $state, toastr, LoginService, appname, anonymous) {
     var vm = this;
     vm.name = appname;
     vm.title = appname;
@@ -70,14 +70,13 @@ function AppCtrl($q, $rootScope, $state, toastr, LoginService, appname, anonymou
         LoginService.Logout();
     };
 
-    $rootScope.$on('$stateChangeStart', function(e, toState) {
-        cleanLoadingIndicators();
-        var defer = $q.defer();
-        //defer.delay = 200;
-        defer.wrapperClass = 'indicator-container';
-        (toState.data && toState.data.loadingMessage) ? defer.message = toState.data.loadingMessage : defer.message = null;
-        defer.templateUrl = 'common/loading-indicators/templates/view.loading.tpl.html';
-        vm.contentLoading = defer;
+    $rootScope.$on('$stateChangeStart', function(event, toState, toParams) {
+        if (toState.name === 'preview') {
+            if(!googleDocs.getFromCache(toParams.docsID)) {
+                event.preventDefault();   // Prevent migration to default state                  
+                $state.go('home');    
+            }         
+        }
     });
 
     $rootScope.$on('$stateChangeSuccess', function(e, toState) {
