@@ -1,0 +1,68 @@
+<div class="oc-docs-content-wrap"><section class="guides-section"><h2 id="introduction">Introduction</h2>
+<p>This guide will teach you how to set a maximum line item quantity on a product. This can be used in any situation where you want to limit the maximum quantity a user can purchase for a single line item.</p>
+<p>For example, in my store I want to enable users to select the quantity to be added to cart but  restrict them from ordering more than 2,500 of a selected product. </p>
+<h2 id="prerequisites">Prerequisites</h2>
+<ul>
+<li><a href="https://devcenter.ordercloud.io/guides/base-use-cases/create-and-assign-a-product">Create and Assign a Product</a></li>
+<li><a href="https://devcenter.ordercloud.io/guides/base-use-cases/create-and-assign-price-schedule">Create and Assign a Price Schedule</a></li>
+<li><a href="https://documentation.ordercloud.io/guides/base-use-cases/set-minimum-and-maximum-order-quantities">Set Minimum and Maximum Order Quantities</a></li>
+</ul>
+<h2 id="1-create-a-price-schedule">1. Create a Price Schedule</h2>
+<p>Assuming you have already created the product that you want to set a maximum quantity on, next you will create a corresponding Price Schedule.</p>
+<p>When creating the Price Schedule, set the <code>MaxQuantity</code> value to the desired quantity limit. In this example, set it to <code>2500</code>.</p>
+<p>API Reference: <a href="https://documentation.ordercloud.io/api-reference#PriceSchedules_Create">Create a Price Schedule</a></p>
+<pre class="language-http"><span class="token request-line"><span class="token property">POST</span> https://api.ordercloud.io/v1/priceschedules/{priceScheduleID}s HTTP/1.1</span>
+<span class="token header-name keyword">Authentication:</span> Bearer put_access_token_here
+<span class="token header-name keyword">Content-Type:</span> application/json; charset=UTF-8<span class="token application/json">
+
+
+<span class="token punctuation">{</span>
+ <span class="token string">&quot;ID&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;ExamplePriceScheduleID&quot;</span><span class="token punctuation">,</span>
+ <span class="token string">&quot;Name&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;Example Price Schedule Name&quot;</span><span class="token punctuation">,</span>
+ <span class="token string">&quot;ApplyTax&quot;</span><span class="token punctuation">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+ <span class="token string">&quot;ApplyShipping&quot;</span><span class="token punctuation">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+ <span class="token string">&quot;MinQuantity&quot;</span><span class="token punctuation">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+ <span class="token string">&quot;MaxQuantity&quot;</span><span class="token punctuation">:</span> <span class="token number">2500</span><span class="token punctuation">,</span>
+ <span class="token string">&quot;UseCumulativeQuantity&quot;</span><span class="token punctuation">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+ <span class="token string">&quot;RestrictedQuantity&quot;</span><span class="token punctuation">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+ <span class="token string">&quot;OrderType&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;Standard&quot;</span><span class="token punctuation">,</span>
+ <span class="token string">&quot;PriceBreaks&quot;</span><span class="token punctuation">:</span> <span class="token punctuation">[</span>
+   <span class="token punctuation">{</span>
+     <span class="token string">&quot;Quantity&quot;</span><span class="token punctuation">:</span> <span class="token number">1</span><span class="token punctuation">,</span>
+     <span class="token string">&quot;Price&quot;</span><span class="token punctuation">:</span> <span class="token number">5.0</span>
+   <span class="token punctuation">}</span>
+ <span class="token punctuation">]</span><span class="token punctuation">,</span>
+ <span class="token string">&quot;xp&quot;</span><span class="token punctuation">:</span> <span class="token keyword">null</span>
+<span class="token punctuation">}</span>
+</span></pre><h2 id="2-once-you-have-created-the-price-schedule-assign-it-to-the-corresponding-product-">2. Once you have created the Price Schedule, assign it to the corresponding product.</h2>
+<p>API Reference: <a href="https://documentation.ordercloud.io/api-reference#PriceSchedules_Create">Create a Price Schedule</a></p>
+<pre class="language-http"><span class="token request-line"><span class="token property">POST</span> https://api.ordercloud.io/v1/priceschedules/{priceScheduleID}s HTTP/1.1</span>
+<span class="token header-name keyword">Authentication:</span> Bearer put_access_token_here
+<span class="token header-name keyword">Content-Type:</span> application/json; charset=UTF-8<span class="token application/json">
+
+
+<span class="token punctuation">{</span>
+ <span class="token string">&quot;ID&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;FIXIT&quot;</span><span class="token punctuation">,</span>
+ <span class="token string">&quot;Name&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;Example Price Schedule Name&quot;</span><span class="token punctuation">,</span>
+ <span class="token string">&quot;ApplyTax&quot;</span><span class="token punctuation">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+ <span class="token string">&quot;ApplyShipping&quot;</span><span class="token punctuation">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+ <span class="token string">&quot;MinQuantity&quot;</span><span class="token punctuation">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+ <span class="token string">&quot;MaxQuantity&quot;</span><span class="token punctuation">:</span> <span class="token number">2500</span><span class="token punctuation">,</span>
+ <span class="token string">&quot;UseCumulativeQuantity&quot;</span><span class="token punctuation">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+ <span class="token string">&quot;RestrictedQuantity&quot;</span><span class="token punctuation">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+ <span class="token string">&quot;OrderType&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;Standard&quot;</span><span class="token punctuation">,</span>
+ <span class="token string">&quot;PriceBreaks&quot;</span><span class="token punctuation">:</span> <span class="token punctuation">[</span>
+   <span class="token punctuation">{</span>
+     <span class="token string">&quot;Quantity&quot;</span><span class="token punctuation">:</span> <span class="token number">1</span><span class="token punctuation">,</span>
+     <span class="token string">&quot;Price&quot;</span><span class="token punctuation">:</span> <span class="token number">5.0</span>
+   <span class="token punctuation">}</span>
+ <span class="token punctuation">]</span><span class="token punctuation">,</span>
+ <span class="token string">&quot;xp&quot;</span><span class="token punctuation">:</span> <span class="token keyword">null</span>
+<span class="token punctuation">}</span>
+</span></pre><h2 id="what-ifs">What Ifs</h2>
+<p><strong>What if you need to assign this max quantity to all users?</strong><br> You would need to assign the Price Schedule with the set <code>MaxQuantity</code> at the buyer level.</p>
+<p><strong>What if you need to assign different maximum quantities to different sets of users?</strong><br> You would<em>**</em> have to create multiple Price Schedules with a unique <code>MaxQuantity</code> for each set of users needed. Then make sure the Price Schedule assignments correspond to the users or user groups you want.</p>
+<p><strong>What if you need to control the max quantity across the whole order for a specific product?</strong><br>If you want to restrict the user from adding multiple line items of the same product in order to exceed the max quantity, set the <code>UseCumulativeQuantity</code> property to <code>true</code> on the Price Schedule. This will limit the user to specific quantities across their entire order. </p>
+<h2 id="conclusion">Conclusion</h2>
+<p>This guide allows you to establish a maximum quantity on a product through a Price Schedule.</p>
+</section></div>

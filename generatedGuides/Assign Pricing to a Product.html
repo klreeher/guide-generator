@@ -1,0 +1,76 @@
+<div class="oc-docs-content-wrap"><section class="guides-section"><h2 id="introduction">Introduction</h2>
+<p>Products are an essential building block for a catalog. In this guide, you&#x2019;ll learn how to create a product that will cost the same for all users. This is a fairly basic configuration as it does not restrict price, quantity nor involve product visibility or different prices for users. To learn more about complex products/pricing, check out <a href="#">Create Multiple Price Assignments**</a>.</p>
+<h2 id="prerequisites">Prerequisites</h2>
+<ul>
+<li><a href="https://documentation.ordercloud.io/guides/getting-started/quick-start-guide#FirstOrg">Create a Seller Organization</a></li>
+<li><a href="https://documentation.ordercloud.io/guides/base-use-cases/create-a-buyer-organization">Create a Buyer Organization</a></li>
+<li><a href="https://documentation.ordercloud.io/guides/base-use-cases/create-a-user-in-a-buyer-organization">Create a User in a Buyer Organization</a></li>
+</ul>
+<h2 id="1-create-a-product">1. Create a Product</h2>
+<p>When creating your product, be sure to update the property <code>&quot;Active&quot;: true</code>. Also note that a <code>&quot;QuantityMultiplier&quot;: 1</code> is required for the product to be counted as one line item. The remaining properties in this request body pertain to more complex configurations.</p>
+<p>API reference: <a href="https://documentation.ordercloud.io/api-reference#Products_Create">Create New Product</a></p>
+<pre class="language-http"><span class="token request-line"><span class="token property">POST</span> https://api.ordercloud.io/v1/products HTTP/1.1</span>
+<span class="token header-name keyword">Authentication:</span> Bearer put_access_token_here
+<span class="token header-name keyword">Content-Type:</span> application/json; charset=UTF-8<span class="token application/json">
+
+
+<span class="token punctuation">{</span>
+  <span class="token string">&quot;ID&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;productID&quot;</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;Name&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;Product Name&quot;</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;Description&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;&quot;</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;QuantityMultiplier&quot;</span><span class="token punctuation">:</span> <span class="token number">1</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;ShipWeight&quot;</span><span class="token punctuation">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;ShipHeight&quot;</span><span class="token punctuation">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;ShipWidth&quot;</span><span class="token punctuation">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;ShipLength&quot;</span><span class="token punctuation">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;Active&quot;</span><span class="token punctuation">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;Type&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;Static&quot;</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;InventoryEnabled&quot;</span><span class="token punctuation">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;InventoryNotificationPoint&quot;</span><span class="token punctuation">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;VariantLevelInventory&quot;</span><span class="token punctuation">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;xp&quot;</span><span class="token punctuation">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;AllowOrderExceedInventory&quot;</span><span class="token punctuation">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;InventoryVisible&quot;</span><span class="token punctuation">:</span> <span class="token boolean">false</span>
+<span class="token punctuation">}</span>
+</span></pre><h2 id="2-create-a-price-schedule">2. Create a Price Schedule</h2>
+<p>API reference: <a href="https://documentation.ordercloud.io/api-reference#PriceSchedules_Create">Create New Price Schedule</a></p>
+<pre class="language-http"><span class="token request-line"><span class="token property">POST</span> https://api.ordercloud.io/v1/priceschedules HTTP/1.1</span>
+<span class="token header-name keyword">Authentication:</span> Bearer put_access_token_here
+<span class="token header-name keyword">Content-Type:</span> application/json; charset=UTF-8<span class="token application/json">
+
+
+<span class="token punctuation">{</span>
+  <span class="token string">&quot;ID&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;priceScheduleID&quot;</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;Name&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;priceScheduleName&quot;</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;ApplyTax&quot;</span><span class="token punctuation">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;ApplyShipping&quot;</span><span class="token punctuation">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;MaxQuantity&quot;</span><span class="token punctuation">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;UseCumulativeQuantity&quot;</span><span class="token punctuation">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;RestrictedQuantity&quot;</span><span class="token punctuation">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;OrderType&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;Standard&quot;</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;PriceBreaks&quot;</span><span class="token punctuation">:</span> <span class="token punctuation">[</span>
+    <span class="token punctuation">{</span>
+      <span class="token string">&quot;Quantity&quot;</span><span class="token punctuation">:</span> <span class="token number">1</span><span class="token punctuation">,</span>
+      <span class="token string">&quot;Price&quot;</span><span class="token punctuation">:</span> <span class="token number">1.0</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">]</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;xp&quot;</span><span class="token punctuation">:</span> <span class="token keyword">null</span>
+<span class="token punctuation">}</span>
+</span></pre><p>In OrderCloud.io, price schedules govern how much a product costs <strong>per product unit</strong>. Here we set the <code>Quantity</code> and <code>Price</code> of the <code>PriceBreaks</code> to a 1:1 relation, which will make a product cost <code>1</code> per <code>1</code> line-item.</p>
+<h2 id="3-assign-a-product-to-a-price-schedule">3. Assign a Product to a Price Schedule</h2>
+<p>Next we need our product assigned to our price schedule. Here is the request body to save the assignment: </p>
+<p>API reference: <a href="https://documentation.ordercloud.io/api-reference#Products_SaveAssignment">Save Assignment</a></p>
+<pre class="language-http"><span class="token request-line"><span class="token property">POST</span> https://api.ordercloud.io/v1/products/assignments HTTP/1.1</span>
+<span class="token header-name keyword">Authentication:</span> Bearer put_access_token_here
+<span class="token header-name keyword">Content-Type:</span> application/json; charset=UTF-8<span class="token application/json">
+
+
+<span class="token punctuation">{</span>
+  <span class="token string">&quot;ProductID&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;productID&quot;</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;PriceScheduleID&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;priceScheduleID&quot;</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;BuyerID&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;buyerID&quot;</span>
+<span class="token punctuation">}</span>
+</span></pre><p>In this request body, we are only assigning on a buyer level by using only the <code>BuyerID</code> property. This way all users in this buyer organization may purchase this product at a specific price. For more information on assignments please refer to <a href="#">make an assignment**</a>.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>You made a product that can be purchased by any user in a buyer organization and should have the building blocks necessary to begin customizing your unique product pricing.</p>
+</section></div>

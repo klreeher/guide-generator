@@ -1,0 +1,159 @@
+<div class="oc-docs-content-wrap"><section class="guides-section"><h2 id="introduction">Introduction</h2>
+<p>This guide will teach you how to use a combination of the product, Spec, and Spec options resources to create a configurable product with conditional pricing changes based on the options selected by the buyer user. This is often referred to as Configure, Price, Quote in commerce terms.</p>
+<p>The example we will walk through is offering a product where the user can select their type of bindings on a Notebook, as well as choose whether or not they would like an engraving on the cover of the Notebook. Based on their selection, the price will be different.</p>
+<h2 id="prerequisites">Prerequisites</h2>
+<ul>
+<li><a href="https://documentation.ordercloud.io/guides/base-use-cases/create-a-user-in-a-buyer-organization">Create a User in a Buyer Organization</a></li>
+<li><a href="https://documentation.ordercloud.io/guides/base-use-cases/create-and-assign-a-product#CreateAProduct">Create and Assign a Product</a></li>
+<li><a href="https://documentation.ordercloud.io/guides/base-use-cases/make-an-assignment">Make an Assignment</a></li>
+</ul>
+<h2 id="1-create-specs">1. Create Specs</h2>
+<p>For this scenario, we will create two Specs: one Spec will represent the choice of bindings, and one to represent the choice of engraving.</p>
+<p>API Reference: <a href="https://documentation.ordercloud.io/api-reference#Specs_Create">Create a Spec</a></p>
+<pre class="language-http"><span class="token request-line"><span class="token property">POST</span> https://api.ordercloud.io/v1/specs HTTP/1.1</span>
+<span class="token header-name keyword">Authentication:</span> Bearer put_access_token_here
+<span class="token header-name keyword">Content-Type:</span> application/json; charset=UTF-8<span class="token application/json">
+
+
+<span class="token punctuation">{</span>
+  <span class="token string">&quot;ID&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;Leatherbound&quot;</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;ListOrder&quot;</span><span class="token punctuation">:</span> <span class="token number">1</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;Name&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;Leatherbound&quot;</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;DefaultValue&quot;</span><span class="token punctuation">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;Required&quot;</span><span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;IsOpenText&quot;</span><span class="token punctuation">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;DefaultOptionID&quot;</span><span class="token punctuation">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;DefinesVariant&quot;</span><span class="token punctuation">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;xp&quot;</span><span class="token punctuation">:</span> <span class="token keyword">null</span>
+<span class="token punctuation">}</span>
+</span></pre><p>API Reference: <a href="https://documentation.ordercloud.io/api-reference#Specs_Create">Create a Spec</a></p>
+<pre class="language-http"><span class="token request-line"><span class="token property">POST</span> https://api.ordercloud.io/v1/specs HTTP/1.1</span>
+<span class="token header-name keyword">Authentication:</span> Bearer put_access_token_here
+<span class="token header-name keyword">Content-Type:</span> application/json; charset=UTF-8<span class="token application/json">
+
+
+<span class="token punctuation">{</span>
+  <span class="token string">&quot;ID&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;Engraved&quot;</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;ListOrder&quot;</span><span class="token punctuation">:</span> <span class="token number">2</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;Name&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;Engraved&quot;</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;DefaultValue&quot;</span><span class="token punctuation">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;Required&quot;</span><span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;IsOpenText&quot;</span><span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;DefaultOptionID&quot;</span><span class="token punctuation">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;DefinesVariant&quot;</span><span class="token punctuation">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;xp&quot;</span><span class="token punctuation">:</span> <span class="token keyword">null</span>
+<span class="token punctuation">}</span>
+</span></pre><p>Note: <code>DefaultValue</code> and <code>DefaultOptionID</code> should be left off of the request body or left null when creating a new Spec since there are no options at this point in time.</p>
+<h2 id="2-create-specoptions-for-your-specs">2. Create SpecOptions for Your Specs</h2>
+<p>In this step, we will create options under both of our Specs that will represent the selections customers will be able to make on the storefront. Using our Notebook example, the <code>Leatherbound</code> Spec and the <code>Engraved</code> Spec will have two SpecOptions to choose from. </p>
+<p>Starting with the <code>Engraved</code> SpecOption, we will declare <code>&quot;IsOpenText&quot;: true</code> so the user can enter custom text to be engraved on the Notebook. In our example, an <code>Engraved</code> Notebook has a markup; therefore, we will define the <code>PriceMarkupType</code> and <code>PriceMarkup</code> values for this Spec. Refer to the following table to understand the possible values available for <code>PriceMarkupType</code>:</p>
+<p>Value:                 <code>NoMarkup</code> or null
+Definition:        This will have no effect on <code>PriceMarkup</code>.
+Use Case:        -</p>
+<p>Value:                 <code>AmountTotal</code>
+Definition:        The integer value saved in <code>PriceMarkup</code> will be applied to the line item total one 
+time, regardless of quantity. 
+Use Case:        This is common in print production for creating a one-time setup fee. A user could 
+order 25 shirts but only pay one $50 setup fee for the entire order.                </p>
+<p>Value:                 <code>AmountPerQuantity</code>
+Definition:        The integer value saved in <code>PriceMarkup</code> will be multiplied by the quantity 
+purchased and applied to the line total.
+Use Case:        Since each <code>Engraved</code> Notebook in our example incurs an additional charge, we 
+will use the <code>AmountPerQuantity</code> value to add a markup on each item ordered.</p>
+<p>Value:                 <code>Percentage</code>
+Definition:        The integer value saved in <code>PriceMarkup</code> represents the percentage 
+increase/decrease of the line item total.
+Use Case:        If you wanted to offer a 25% discount on a precise SpecOption, we could set the 
+<code>&quot;PriceMarkupType&quot;: Percentage</code> and <code>&quot;PriceMarkup&quot;: -25</code>, which would
+enable the discount when the user selects that product option.</p>
+<p>Note: A negative integer in <code>PriceMarkup</code> would decrease the price per quantity, once in total or by a percentage as appropriate depending on the <code>PriceMarkupType</code> value selected.</p>
+<p>API Reference: <a href="https://documentation.ordercloud.io/api-reference#SpecOption_Create">Create a Spec Option</a> </p>
+<pre class="language-javascript">POST https<span class="token punctuation">:</span><span class="token operator">/</span><span class="token operator">/</span>api<span class="token punctuation">.</span>ordercloud<span class="token punctuation">.</span>io<span class="token operator">/</span>v1<span class="token operator">/</span>specs<span class="token operator">/</span>Leatherbound<span class="token operator">/</span>options HTTP<span class="token operator">/</span><span class="token number">1.1</span>
+Authentication<span class="token punctuation">:</span> Bearer put_access_token_her
+Content<span class="token operator">-</span>Type<span class="token punctuation">:</span> application<span class="token operator">/</span>json<span class="token punctuation">;</span> charset<span class="token operator">=</span>UTF<span class="token number">-8</span>
+
+
+<span class="token punctuation">{</span>
+  <span class="token string">&quot;ID&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;engraved-yes&quot;</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;Value&quot;</span><span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;ListOrder&quot;</span><span class="token punctuation">:</span> <span class="token number">1</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;IsOpenText&quot;</span><span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;PriceMarkupType&quot;</span><span class="token punctuation">:</span> &#x201C;AmountPerQuantity&#x201D;<span class="token punctuation">,</span>
+  <span class="token string">&quot;PriceMarkup&quot;</span><span class="token punctuation">:</span> <span class="token number">5.00</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;xp&quot;</span><span class="token punctuation">:</span> <span class="token keyword">null</span>
+<span class="token punctuation">}</span>
+</pre><pre class="language-javascript">POST https<span class="token punctuation">:</span><span class="token operator">/</span><span class="token operator">/</span>api<span class="token punctuation">.</span>ordercloud<span class="token punctuation">.</span>io<span class="token operator">/</span>v1<span class="token operator">/</span>specs<span class="token operator">/</span>Leatherbound<span class="token operator">/</span>options HTTP<span class="token operator">/</span><span class="token number">1.1</span>
+Authentication<span class="token punctuation">:</span> Bearer put_access_token_her
+Content<span class="token operator">-</span>Type<span class="token punctuation">:</span> application<span class="token operator">/</span>json<span class="token punctuation">;</span> charset<span class="token operator">=</span>UTF<span class="token number">-8</span>
+
+
+<span class="token punctuation">{</span>
+  <span class="token string">&quot;ID&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;engraved-no&quot;</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;Value&quot;</span><span class="token punctuation">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;ListOrder&quot;</span><span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;IsOpenText&quot;</span><span class="token punctuation">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;PriceMarkupType&quot;</span><span class="token punctuation">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;PriceMarkup&quot;</span><span class="token punctuation">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;xp&quot;</span><span class="token punctuation">:</span> <span class="token keyword">null</span>
+<span class="token punctuation">}</span>
+</pre><p>Since there is no markup or open text field for the <code>Leatherbound</code> Notebook option, we will keep the <code>&quot;PriceMarkupType&quot;: null</code> and <code>&quot;IsOpenText&quot;: false</code>:</p>
+<p>API Reference: <a href="https://documentation.ordercloud.io/api-reference#Specs_CreateOption">Create Spec Option</a> </p>
+<pre class="language-javascript">POST https<span class="token punctuation">:</span><span class="token operator">/</span><span class="token operator">/</span>api<span class="token punctuation">.</span>ordercloud<span class="token punctuation">.</span>io<span class="token operator">/</span>v1<span class="token operator">/</span>specs<span class="token operator">/</span>Leatherbound<span class="token operator">/</span>options HTTP<span class="token operator">/</span><span class="token number">1.1</span>
+Authentication<span class="token punctuation">:</span> Bearer put_access_token_her
+Content<span class="token operator">-</span>Type<span class="token punctuation">:</span> application<span class="token operator">/</span>json<span class="token punctuation">;</span> charset<span class="token operator">=</span>UTF<span class="token number">-8</span>
+
+
+<span class="token punctuation">{</span>
+  <span class="token string">&quot;ID&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;Leatherbound&quot;</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;Value&quot;</span><span class="token punctuation">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;ListOrder&quot;</span><span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;IsOpenText&quot;</span><span class="token punctuation">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;PriceMarkupType&quot;</span><span class="token punctuation">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;PriceMarkup&quot;</span><span class="token punctuation">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;xp&quot;</span><span class="token punctuation">:</span> <span class="token keyword">null</span>
+<span class="token punctuation">}</span>
+</pre><pre class="language-javascript">POST https<span class="token punctuation">:</span><span class="token operator">/</span><span class="token operator">/</span>api<span class="token punctuation">.</span>ordercloud<span class="token punctuation">.</span>io<span class="token operator">/</span>v1<span class="token operator">/</span>specs<span class="token operator">/</span>Leatherbound<span class="token operator">/</span>options HTTP<span class="token operator">/</span><span class="token number">1.1</span>
+Authentication<span class="token punctuation">:</span> Bearer put_access_token_her
+Content<span class="token operator">-</span>Type<span class="token punctuation">:</span> application<span class="token operator">/</span>json<span class="token punctuation">;</span> charset<span class="token operator">=</span>UTF<span class="token number">-8</span>
+
+
+<span class="token punctuation">{</span>
+  <span class="token string">&quot;ID&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;Leatherbound&quot;</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;Value&quot;</span><span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;ListOrder&quot;</span><span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;IsOpenText&quot;</span><span class="token punctuation">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;PriceMarkupType&quot;</span><span class="token punctuation">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;PriceMarkup&quot;</span><span class="token punctuation">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;xp&quot;</span><span class="token punctuation">:</span> <span class="token keyword">null</span>
+<span class="token punctuation">}</span>
+</pre><h2 id="3-assign-specs-to-your-product">3. Assign Specs to Your Product</h2>
+<p>The final step is to assign the Spec to the product, which will enable the <code>SpecOptions</code> when a line item is created from that product. Continuing our previous example, we will assign both the <code>Engraved</code> and <code>Leatherbound</code> Specs to our <code>Notebook</code>. We can also use assignments to designate the default option and values that should be displayed for that specific product.</p>
+<p>API Reference: <a href="https://documentation.ordercloud.io/api-reference#Specs_SaveProductAssignment">Assign a Spec to a Product</a></p>
+<pre class="language-http"><span class="token request-line"><span class="token property">POST</span> https://api.ordercloud.io/v1/specs/productassignments HTTP/1.1</span>
+<span class="token header-name keyword">Authentication:</span> Bearer put_access_token_here
+<span class="token header-name keyword">Content-Type:</span> application/json; charset=UTF-8<span class="token application/json">
+
+
+<span class="token punctuation">{</span>
+  <span class="token string">&quot;SpecID&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;Leatherbound&quot;</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;ProductID&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;Notebook&quot;</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;DefaultValue&quot;</span><span class="token punctuation">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;DefaultOptionID&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;No&quot;</span>
+<span class="token punctuation">}</span>
+</span></pre><p>API Reference: <a href="https://documentation.ordercloud.io/api-reference#Specs_SaveProductAssignment">Assign a Spec to a Product</a></p>
+<pre class="language-http"><span class="token request-line"><span class="token property">POST</span> https://api.ordercloud.io/v1/specs/productassignments HTTP/1.1</span>
+<span class="token header-name keyword">Authentication:</span> Bearer put_access_token_here
+<span class="token header-name keyword">Content-Type:</span> application/json; charset=UTF-8<span class="token application/json">
+
+
+<span class="token punctuation">{</span>
+  <span class="token string">&quot;SpecID&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;Engraved&quot;</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;ProductID&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;Notebook&quot;</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;DefaultValue&quot;</span><span class="token punctuation">:</span> &#x201C;&#x201D;<span class="token punctuation">,</span>
+  <span class="token string">&quot;DefaultOptionID&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;No&quot;</span>
+<span class="token punctuation">}</span>
+</span></pre><p>NOTE: <code>DefaultValue</code> on the <code>Engraved</code> Spec to <code>Notebook</code> product assignment is an empty string so that when the user selects this option, they start with a blank field to enter their desired engraving text.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>By following this guide, you should have a starting point for creating even more complex products with a variety of SpecOptions and markups. Remember that the combination of Specs and SpecOptions will allow you to present specific customizations and configurations on whichever products you&#x2019;d like. Furthermore the configurations based on the SpecOptions applied in the platform can be presented any number of ways in your own custom buyer applications to meet whatever business requirement.</p>
+<p>For additional details on how the buyer side flow of this configuration works go here (link to applying Spec options to line items on an order guide?!?!?!?!?!!?)</p>
+</section></div>

@@ -1,0 +1,67 @@
+<div class="oc-docs-content-wrap"><section class="guides-section"><h2 id="introduction">Introduction</h2>
+<p>This guide will teach you how to generate variants for a product. In this example, we will be generating variants from two unique Specs, each with different SpecOptions. Generating variants creates all available combinations for a product.</p>
+<h2 id="prerequisites">Prerequisites</h2>
+<ul>
+<li><a href="https://devcenter.ordercloud.io/guides/base-use-cases/create-and-assign-a-product">Create and Assign Product within a Buyer Organization</a></li>
+<li><a href="https://documentation.ordercloud.io/guides/base-use-cases/make-an-assignment">Make An Assignment</a></li>
+</ul>
+<h2 id="1-create-new-spec-and-assign-to-product">1. Create New Spec and Assign to Product</h2>
+<p>Specs are used to define the attributes that are configurable on a product. An example of a Spec would be the different colors available for a TShirt.</p>
+<p>API Reference: <a href="https://documentation.ordercloud.io/api-reference#Specs_Create">Create New Spec</a></p>
+<pre class="language-http"><span class="token request-line"><span class="token property">POST</span> https://api.ordercloud.io/v1/specs HTTP/1.1</span>
+<span class="token header-name keyword">Authentication:</span> Bearer put_access_token_here
+<span class="token header-name keyword">Content-Type:</span> application/json; charset=UTF-8<span class="token application/json">
+
+<span class="token punctuation">{</span>
+  <span class="token string">&quot;ID&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;Color&quot;</span><span class="token punctuation">,</span>
+   <span class="token string">&quot;Name&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;Color&quot;</span><span class="token punctuation">,</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;Required&quot;</span><span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;DefaultOptionID&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;&quot;</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;DefinesVariant&quot;</span><span class="token punctuation">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span>
+</span></pre><p>Note: Once the Spec has SpecOptions, we can also define a <code>DefaultOptionID</code>, which will display a pre-set Spec for a product.</p>
+<h2 id="2-assign-to-product">2. Assign to Product</h2>
+<p>Once you have created the Spec, you can assign it to the product:<br><br>
+API Reference: <a href="https://documentation.ordercloud.io/api-reference#Specs_SaveProductAssignment">Save Product Assignment</a></p>
+<pre class="language-http"><span class="token request-line"><span class="token property">POST</span> https://api.ordercloud.io/v1/specs/productassignments HTTP/1.1</span>
+<span class="token header-name keyword">Authentication:</span> Bearer put_access_token_here
+<span class="token header-name keyword">Content-Type:</span> application/json; charset=UTF-8<span class="token application/json">
+
+<span class="token punctuation">{</span>
+  <span class="token string">&quot;SpecID&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;Color&quot;</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;ProductID&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;TShirt&quot;</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;DefaultValue&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;&quot;</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;DefaultOptionID&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;&quot;</span>
+<span class="token punctuation">}</span>
+</span></pre><h2 id="3-create-specoptions">3. Create SpecOptions</h2>
+<p>Next, we create the SpecOptions associated with the Spec. This step generates the values of a Spec that are available on a product. Continuing the previous example, one of our Specs for the TShirt could be the Color, so the SpecOptions would be Red, Blue, etc.</p>
+<p>When creating SpecOptions, you will first need to define the <code>SpecID</code> (in our example, Color) in order to map each value to the correct Spec. </p>
+<p>API Reference: <a href="https://documentation.ordercloud.io/api-reference#Specs_CreateOption">Create Option</a></p>
+<pre class="language-http"><span class="token request-line"><span class="token property">POST</span> https://api.ordercloud.io/v1/specs/{specID}/options HTTP/1.1</span>
+<span class="token header-name keyword">Authentication:</span> Bearer put_access_token_here
+<span class="token header-name keyword">Content-Type:</span> application/json; charset=UTF-8<span class="token application/json">
+
+<span class="token punctuation">{</span>
+  <span class="token string">&quot;ID&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;001&quot;</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;Value&quot;</span><span class="token punctuation">:</span> <span class="token string">&quot;red&quot;</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;ListOrder&quot;</span><span class="token punctuation">:</span> <span class="token number">0</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;IsOpenText&quot;</span><span class="token punctuation">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;PriceMarkupType&quot;</span><span class="token punctuation">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;PriceMarkup&quot;</span><span class="token punctuation">:</span> <span class="token keyword">null</span><span class="token punctuation">,</span>
+  <span class="token string">&quot;xp&quot;</span><span class="token punctuation">:</span> <span class="token keyword">null</span>
+<span class="token punctuation">}</span>
+</span></pre><h2 id="4-generate-variants">4. Generate Variants</h2>
+<p>Once your Spec and SpecOptions have been created, the next step is to generate the variants. OrderCloud automatically composes all possible combinations available for a product based on your Spec values using the <code>GenerateVariants</code> call. Our TShirt example contains two Specs: Size and Color; therefore, the variants that will generate would be: Small-Red, Small-Blue, Medium-Red, Medium-Blue, Large-Red, Large-Blue, etc.</p>
+<p>API Reference: <a href="https://documentation.ordercloud.io/api-reference#Products_GenerateVariants">Generate Variants</a></p>
+<p><img src="assets/use-case-guides/GenerateVariants.gif" alt="GenerateVariants"></p>
+<h2 id="5-list-variants">5. List Variants</h2>
+<p>The variants that were generated can be viewed by calling <code>ListVariants</code>, which will return all variants of the product. Our TShirt example has 2 Specs (Size and Color) with 2 SpecOptions for Color and 3 SpecOptions for Size; therefore, the <code>ListVariants</code> call would return 6 Variants.</p>
+<p>API Reference: <a href="https://documentation.ordercloud.io/api-reference#Products_ListVariants">List Variants</a></p>
+<p><img src="assets/use-case-guides/ListVariants.gif" alt="ListVariants"></p>
+<h2 id="what-ifs">What Ifs</h2>
+<p><strong>What if I want to enable custom text for a Spec attribute?</strong><br>
+Variants can also allow a user to enter free text for an attribute on a product. Using business cards as an example, users could enter their personal information into a Spec field by setting the <code>AllowOpenText</code> field to <code>true</code>.</p>
+<p><aside>An additional note when creating the product/Spec assignment, if you were to enter a <code>DefaultOptionID</code> this will override the <code>DefaultOptionID</code>, if it exists, on the Spec.</aside></p>
+<h2 id="conclusion">Conclusion</h2>
+<p>Variants are used to help customers view and compare the different combinations available on a given product. You should now have an understanding for how to generate a browsing experience that allows users to specify product variations.</p>
+</section></div>

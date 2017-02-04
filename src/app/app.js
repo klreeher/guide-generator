@@ -11,17 +11,7 @@ angular.module('orderCloud', [
     'LocalForageModule',
     'toastr',
     'cgBusy',
-    'jcs-autoValidate',
-    'ordercloud-infinite-scroll',
-    'ordercloud-buyer-select',
-    'ordercloud-search',
-    'ordercloud-assignment-helpers',
-    'ordercloud-paging-helpers',
-    'ordercloud-auto-id',
-    'ordercloud-current-order',
-    'ordercloud-address',
-    'ordercloud-lineitems',
-    'ordercloud-geography'
+    'jcs-autoValidate'
     ])
     .run(SetBuyerID)
     .config(Routing)
@@ -57,12 +47,11 @@ function ErrorHandling($provide) {
     }
 }
 
-function AppCtrl($q, $rootScope, $state, $ocMedia, toastr, LoginService, appname, anonymous) {
+function AppCtrl($q, $rootScope, $state, toastr, LoginService, appname, anonymous) {
     var vm = this;
     vm.name = appname;
     vm.title = appname;
     vm.$state = $state;
-    vm.$ocMedia = $ocMedia;
     vm.contentLoading = undefined;
 
     function cleanLoadingIndicators() {
