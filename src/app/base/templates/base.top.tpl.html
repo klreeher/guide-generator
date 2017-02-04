@@ -23,8 +23,8 @@
                 <li ui-sref-active="active">
                     <a ui-sref="home"><i class="fa fa-map-o"></i> Generate Guide</a>
                 </li>
-                <li ui-sref-active="active">
-                    <a ui-sref="preview"><i class="fa fa-eye"></i> Preview</a>
+                <li ui-sref-active="active" ng-if="base.generatedGuides.length">
+                    <a ui-sref="preview({docsID: base.generatedGuides[0].id})"><i class="fa fa-eye"></i> Preview</a>
                 </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">

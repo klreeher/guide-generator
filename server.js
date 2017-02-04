@@ -114,8 +114,9 @@ app.get('/api/googledocs/:docID/:token/:chapter', function(req, res) {
                 var guideTitle = JSON.parse(html).name;
                 var guideID = guideTitle.toLowerCase().replace(/ /g, '-');
                 var guideContent = {
-                    guideTitle:guideTitle,
-                    parsedHtml:parsedHtml
+                    name: guideTitle,
+                    id: JSON.parse(html).id,
+                    html: parsedHtml
                 };
 
                 var chapterMapping = {};
@@ -128,6 +129,8 @@ app.get('/api/googledocs/:docID/:token/:chapter', function(req, res) {
                     stateLink:{name:'use-case-guides.content', params:{sectionID: req.params.chapter, guideID:guideID}},
                     anchorTags:anchorTags
                 };
+                guideContent.navContent = navContent;
+                guideContent.chapter = navContent.chapter;
             }
             fs.writeFile('generatedGuides/' + guideTitle + '.html', '<div class="oc-docs-content-wrap"><section class="guides-section">', function(err){
                 if(!err){
@@ -140,7 +143,7 @@ app.get('/api/googledocs/:docID/:token/:chapter', function(req, res) {
             });
             fs.appendFile('generatedGuides/navContent.json', JSON.stringify(navContent), function(){});
             fs.appendFile('generatedGuides/navContent.json', ',', function(){});
-            res.status(200).json({ guideContent:guideContent, navContent:navContent});
+            res.status(200).json({ guideContent:guideContent});
         });
     });
 });

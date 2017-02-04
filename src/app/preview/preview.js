@@ -7,14 +7,21 @@ function PreviewConfig($stateProvider){
     $stateProvider
         .state('preview', {
             parent:'base',
-            url:'/preview',
+            url:'/preview/:docsID',
             templateUrl:'preview/templates/preview.tpl.html',
             controller:'PreviewCtrl',
-            controllerAs:'preview'
+            controllerAs:'preview',
+            resolve: {
+                SelectedGuide: function(googleDocs, $stateParams){
+                    return googleDocs.getFromCache($stateParams.docsID);
+                }
+            }
         })
     ;
 }
 
-function PreviewController(){
+function PreviewController(SelectedGuide){
     var vm = this;
+    vm.selectedGuide = SelectedGuide;
+    console.log(SelectedGuide)
 }

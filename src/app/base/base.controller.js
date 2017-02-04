@@ -25,18 +25,18 @@ function BaseController($rootScope, $exceptionHandler, $sce, $q, Underscore, Cur
                     googleDocs.setToken(auth.access_token);
                     callApi(auth.access_token);
                 });
-        }
+            }
 
         function callApi(token){
             var docID = vm.docsURL.replace('https://', '').split('/')[3];
             return googleDocs.getGuide(docID, token, vm.guideChapter)
                 .then(function(data) {
-                    data.guideContent.parsedHtml = $sce.trustAsHtml(data.guideContent.parsedHtml);
-                    vm.previewGuide = data;
-                    console.log(vm.previewGuide);
-                    $state.go('preview');
+                    data.guideContent.html = $sce.trustAsHtml(data.guideContent.html);
+                    googleDocs.setCache(data.guideContent);
+                    vm.generatedGuides.push(data.guideContent);
+                    $state.go('preview', {docsID: data.guideContent.id});
                 });
-        }
+            }
     };
 
     vm.generateGuidesInFolder = function(){
