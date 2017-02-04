@@ -1,7 +1,7 @@
 angular.module('orderCloud')
     .factory('googleDocs', googleDocs)
 
-function googleDocs($resource, $window){
+function googleDocs($resource, $sce, $window){
     //manage api key - https://console.developers.google.com
     //google drive api - https://developers.google.com/drive/v3/reference/
     var apiKey = null;
@@ -49,6 +49,7 @@ function googleDocs($resource, $window){
     }
 
     function _setCache(guide){
+        guide.html = $sce.trustAsHtml(guide.html); //allows us to bind html
         cachedGuides[guide.id] = guide;
     }
 

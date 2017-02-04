@@ -6,7 +6,6 @@ var config = require('./gulp.config');
     google drive api - https://developers.google.com/drive/v3/reference/
     list files query docs- https://developers.google.com/drive/v3/web/search-parameters
     cheerio reference - https://github.com/cheeriojs/cheerio/blob/master/Readme.md
-
 */
 
 var express = require('express'),
@@ -34,6 +33,7 @@ app.use(bodyParser.json({
     type: 'application/vnd.api+json'
 })); //parse application/vnd.api+json as json
 
+
 app.get('/api/googledocs-folder/:folderID/:token', function(req, res){
     var getFolderContentUrl = "https://www.googleapis.com/drive/v3/files/?q='" + req.params.folderID + "'+in+parents";
     var requestBody = {
@@ -48,10 +48,13 @@ app.get('/api/googledocs-folder/:folderID/:token', function(req, res){
             console.log('There was an error', error);
             res.send('There was an error retrieving files');
         } else {
-            fs.writeFile('output.json', json, function(err){
-                console.log('File Successfully Written - check your project directory for the output.json file');
+            fs.access('generatedGuides', function(err) {
+                if (err && err.code === 'ENOENT') {
+                    fs.mkdir('generatedGuides');
+                }
+                fs.writeFile('generatedGuides/navContent.json', '', function(){});
+                res.send(json);
             });
-            res.send(json);
         }
     });
 
@@ -132,18 +135,24 @@ app.get('/api/googledocs/:docID/:token/:chapter', function(req, res) {
                 guideContent.navContent = navContent;
                 guideContent.chapter = navContent.chapter;
             }
-            fs.writeFile('generatedGuides/' + guideTitle + '.html', '<div class="oc-docs-content-wrap"><section class="guides-section">', function(err){
-                if(!err){
-                    fs.appendFile('generatedGuides/' + guideTitle + '.html', parsedHtml, function(err2){
-                        if(!err2){
-                             fs.appendFile('generatedGuides/' + guideTitle + '.html', '</section></div>', function(){});
-                        }
-                    });
+            fs.access('generatedGuides', function(err) {
+                if (err && err.code === 'ENOENT') {
+                    fs.mkdir('generatedGuides');
                 }
+                fs.writeFile('generatedGuides/' + guideTitle + '.html', '<div class="oc-docs-content-wrap"><section class="guides-section">', function(err){
+                    if(!err){
+                        fs.appendFile('generatedGuides/' + guideTitle + '.html', parsedHtml, function(err2){
+                            if(!err2){
+                                fs.appendFile('generatedGuides/' + guideTitle + '.html', '</section></div>', function(){});
+                            }
+                        });
+                    }
+                    });
+                fs.appendFile('generatedGuides/navContent.json', JSON.stringify(navContent), function(){});
+                fs.appendFile('generatedGuides/navContent.json', ',', function(){});
+                res.status(200).json({ guideContent:guideContent});
             });
-            fs.appendFile('generatedGuides/navContent.json', JSON.stringify(navContent), function(){});
-            fs.appendFile('generatedGuides/navContent.json', ',', function(){});
-            res.status(200).json({ guideContent:guideContent});
+            
         });
     });
 });

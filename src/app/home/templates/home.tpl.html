@@ -3,28 +3,22 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-8">
-                    <h1>Generate Guide</h1>
-                    <p>To create a guide simply paste the link to your Google Doc in the text box below and click the generate button. Make sure your
-                    guide is correctly formatted and follows the <a ui-sref="guidelines">guidelines</a>
+                    <h1>Generate Guides</h1>
+                    <p>To create a guide simply paste the link to your Google Doc in the text box below and click the generate button. You can also create several guides at once by pasting a link to a Google Docs folder.
                     </p>
+                    <p>Make sure your
+                    guide is correctly formatted and follows the <a ui-sref="guidelines">guidelines</a></p>
                     <form>
                         <div class="form-group">
                             <input type="text" ng-model="base.docsURL" placeholder="Paste Google Docs Link here" class="form-control"><br>
-                        <button class="btn btn-primary btn-large" ng-click="base.generateGuide()" ng-disabled="!base.docsURL" class="form-control">Generate and Preview a Single Guide</button>
-                        </div>
-                    </form>
-                    <form ng-if="base.currentUser.Username === 'admin' ">
-                        <div class="form-group">
-                            <input type="text" ng-model="base.folderURL" placeholder="Paste link to Google Docs folder here" class="form-control">
-                            <br>
-                            <select ng-model="base.guideChapter" ng-options="chapter.id as chapter.name for chapter in base.availableChapters"></select>
-                            <br>
-                            <button class="btn btn-primary btn-large" ng-click="base.generateGuidesInFolder()" ng-disabled="!base.folderURL" class="form-control">Generate All Guides (no preview)</button>
+                            <label for="section">Section: </label>
+                            <select ng-model="base.guideChapter" id="section" ng-options="chapter.id as chapter.name for chapter in base.availableChapters"></select><br><br>
+                            <button class="btn btn-primary btn-large" ng-click="base.generateGuide()" ng-disabled="!base.docsURL" class="form-control">Generate Guide</button>
                         </div>
                     </form>
                 </div>
                 <div class="col-lg-8" ng-if="base.generatedGuides.length">
-                    {{base.generatedGuides.length}} of {{base.totalGuides}} have been generated:
+                    {{base.generatedGuides.length}} of {{base.totalGuides}} guides have been generated:
                     <ul>
                         <li ng-repeat="guide in base.generatedGuides">{{guide.name}}</li>
                     </ul>
