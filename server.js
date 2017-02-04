@@ -7,7 +7,6 @@ var config = require('./gulp.config');
     list files query docs- https://developers.google.com/drive/v3/web/search-parameters
     cheerio reference - https://github.com/cheeriojs/cheerio/blob/master/Readme.md
 
-
 */
 
 var express = require('express'),
@@ -141,7 +140,7 @@ app.get('/api/googledocs/:docID/:token/:chapter', function(req, res) {
             });
             fs.appendFile('generatedGuides/navContent.json', JSON.stringify(navContent), function(){});
             fs.appendFile('generatedGuides/navContent.json', ',', function(){});
-            res.status(200).json({ guideContent:guideContent, navContent: JSON.stringify(navContent) });
+            res.status(200).json({ guideContent:guideContent, navContent:navContent});
         });
     });
 });
