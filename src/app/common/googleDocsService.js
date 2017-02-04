@@ -1,14 +1,28 @@
 angular.module('orderCloud')
     .factory('googleDocs', googleDocs)
 
-function googleDocs($resource){
+function googleDocs($resource, $window){
+    //manage api key - https://console.developers.google.com
+    //google drive api - https://developers.google.com/drive/v3/reference/
     var apiKey = null;
     var service = {
+        authenticate: _authenticate,
         getToken: _getToken,
         setToken: _setToken,
         getGuide: _getGuide,
         listGuideIDs: _listGuideIDs
     };
+
+    function _authenticate(){
+        var CLIENT_ID = '357254235618-0rk836rghajrgnqvi5pjo8nko2og3l3c.apps.googleusercontent.com';
+        var SCOPES = ['https://www.googleapis.com/auth/drive.readonly'];
+        
+        return $window.gapi.auth.authorize({
+            client_id: CLIENT_ID,
+            scope: SCOPES,
+            immediate: false
+        });
+    }
 
     function _getToken(){
         return apiKey;

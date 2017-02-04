@@ -19,14 +19,14 @@
                             <br>
                             <select ng-model="base.guideChapter" ng-options="chapter.id as chapter.name for chapter in base.availableChapters"></select>
                             <br>
-                            <button class="btn btn-primary btn-large" ng-click="base.getAllGuides()" ng-disabled="!base.folderURL" class="form-control">Generate All Guides (no preview)</button>
+                            <button class="btn btn-primary btn-large" ng-click="base.generateGuidesInFolder()" ng-disabled="!base.folderURL" class="form-control">Generate All Guides (no preview)</button>
                         </div>
                     </form>
                 </div>
-                <div class="col-lg-8" ng-if="base.fileList">
-                    {{base.fileList.length}} of {{base.totalFiles}} have been generated:
+                <div class="col-lg-8" ng-if="base.generatedGuides.length">
+                    {{base.generatedGuides.length}} of {{base.totalGuides}} have been generated:
                     <ul>
-                        <li ng-repeat="guide in base.fileList">{{guide.name}}</li>
+                        <li ng-repeat="guide in base.generatedGuides">{{guide.name}}</li>
                     </ul>
                 </div>
             </div>
