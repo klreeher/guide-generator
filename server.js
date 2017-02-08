@@ -84,6 +84,7 @@ app.get('/api/googledocs/:docID/:token/:chapter', function(req, res) {
             console.log('There was an error', error);
             res.send('There was an error parsing your guide');
         } else {
+            html = html.replace(/”|“/g, '"');
             var anchorTags = [];
             var $ = cheerio.load(marked(stripBom(html)));
             $('pre').each(function(){
