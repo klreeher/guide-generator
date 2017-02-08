@@ -139,3 +139,15 @@
     margin: @oc-docs-content-lg-padding;
   }
 }
+
+//used on guides preview
+.api-reference {
+    display: block;
+    padding: @grid-gutter-width / 2;
+    border-radius: @border-radius-small;
+    &:before {
+        content: "\f02d";
+        font-family: "FontAwesome";
+        padding-right: 7px;
+    }
+}
