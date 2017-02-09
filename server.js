@@ -106,6 +106,36 @@ app.get('/api/googledocs/:docID/:token/:chapter', function(req, res) {
                 var tag = $(this).attr('id');
                 anchorTags.push({name:name, tag:tag})
             });
+            $('a').each(function(){
+                var stringUrl = $(this).attr('href'); //use to check if value exists in url;
+
+                //Error Reporting
+                console.log('\x1b[36m%s\x1b[0m', 'link to guide. check here if there is an error:');
+                console.log('\x1b[36m%s\x1b[0m', 'https://docs.google.com/document/d/' + req.params.docID);
+                console.log('');
+                console.log("\x1b[35m", 'link causing issue:');
+                console.log("\x1b[35m", stringUrl);
+                console.log("\x1b[0m", '');
+
+                var url = $(this).attr('href').split('/');
+                var sref;
+                if(stringUrl.indexOf('api-reference') < 0 && stringUrl.indexOf('ordercloud' > -1)){
+                    var anchorLink = null;
+                    if(url[5].indexOf('#') > -1) anchorLink = url[5].split('#');  //determine whether link also includes anchor tag
+
+                    if(!anchorLink) sref = url[3] + "({sectionID:'" + url[4] + "', guideID:'" + url[5] + "'})"; 
+                    if(anchorLink) sref = url[3] + "({sectionID:'" + url[4] + "', guideID:'" + anchorLink[0] + "', '#':'" + anchorLink[1] + "'})";
+                }
+                if(stringUrl.indexOf('api-reference') > -1) {
+                    var apiLink = url[3].split('#');
+                    if(apiLink[1]) sref = apiLink[0] + "({'#':'" + apiLink[1] + "'})";
+                }
+                $(this).attr('ui-sref', sref);
+                console.log('***************************************************');
+                console.log('');
+                console.log('');
+                $(this).attr('href', '#');
+            });
 
             parsedHtml = $.html();
         }
@@ -140,11 +170,11 @@ app.get('/api/googledocs/:docID/:token/:chapter', function(req, res) {
                 if (err && err.code === 'ENOENT') {
                     fs.mkdir('generatedGuides');
                 }
-                fs.writeFile('generatedGuides/' + guideTitle + '.html', '<div class="oc-docs-content-wrap"><section class="guides-section">', function(err){
+                fs.writeFile('generatedGuides/' + guideID + '.tpl.html', '<div class="oc-docs-content-wrap"><section class="guides-section">', function(err){
                     if(!err){
-                        fs.appendFile('generatedGuides/' + guideTitle + '.html', parsedHtml, function(err2){
+                        fs.appendFile('generatedGuides/' + guideID + '.tpl.html', parsedHtml, function(err2){
                             if(!err2){
-                                fs.appendFile('generatedGuides/' + guideTitle + '.html', '</section></div>', function(){});
+                                fs.appendFile('generatedGuides/' + guideID + '.tpl.html', '</section></div>', function(){});
                             }
                         });
                     }
