@@ -140,7 +140,6 @@
   }
 }
 
-//used on guides preview
 .api-reference {
     display: block;
     padding: @grid-gutter-width / 2;
@@ -150,4 +149,26 @@
         font-family: "FontAwesome";
         padding-right: 7px;
     }
+}
+
+.note {
+    background-color: fade(@ordercloud-blue, 15%);
+    border-radius: @border-radius-small;
+    position: relative;
+    padding: @grid-gutter-width;
+    margin: @grid-gutter-width 0;
+    padding-left: @grid-gutter-width*5;
+    margin-bottom: 15px;
+}
+
+.note:before {
+    content: "\f0a1";
+    font-family: "FontAwesome";
+    color: @io-blue;
+    font-size: 2.5em;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    margin-right: 10px;
+    left: 1.6em;
 }
