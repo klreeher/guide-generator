@@ -12,7 +12,6 @@ function BaseController($exceptionHandler,  $q, Underscore, CurrentUser, googleD
         {id:'buyer-and-seller-organization-management', name: 'Buyer and Seller Organization Management'},
         {id: 'order-management', name: 'Order Management'}];
     vm.guideChapter = vm.availableChapters[0].id;
-    vm.folderURL = 'https://drive.google.com/drive/folders/0B9eFq4Wl332GbV9wRTdjTTFWOU0';
 
     vm.generateGuide = function(){
         if(vm.docsURL.indexOf('http') < 0){
@@ -44,7 +43,7 @@ function BaseController($exceptionHandler,  $q, Underscore, CurrentUser, googleD
     }
 
     function generateMultiple(token){
-        var folderID = vm.folderURL.replace('https://', '').split('/')[3];
+        var folderID = vm.docsURL.replace('https://', '').split('/')[3];
         googleDocs.listGuideIDs(folderID, token)
             .then(function(data) {
                 vm.totalGuides = angular.copy(data.files.length);
