@@ -84,7 +84,7 @@ app.get('/api/googledocs/:docID/:token/:chapter', function(req, res) {
             console.log('There was an error', error);
             res.send('There was an error parsing your guide');
         } else {
-            html = html.replace(/”|“/g, '"');
+            // html = html.replace(/”|“/g, '"');
             var anchorTags = [];
             var $ = cheerio.load(marked(stripBom(html)));
             $('pre').each(function(){
@@ -123,8 +123,8 @@ app.get('/api/googledocs/:docID/:token/:chapter', function(req, res) {
                     var anchorLink = null;
                     if(url[5].indexOf('#') > -1) anchorLink = url[5].split('#');  //determine whether link also includes anchor tag
 
-                    if(!anchorLink) sref = url[3] + "({sectionID:'" + url[4] + "', guideID:'" + url[5] + "'})"; 
-                    if(anchorLink) sref = url[3] + "({sectionID:'" + url[4] + "', guideID:'" + anchorLink[0] + "', '#':'" + anchorLink[1] + "'})";
+                    if(!anchorLink) sref = url[3] + ".content({sectionID:'" + url[4] + "', guideID:'" + url[5] + "'})"; 
+                    if(anchorLink) sref = url[3] + ".content({sectionID:'" + url[4] + "', guideID:'" + anchorLink[0] + "', '#':'" + anchorLink[1] + "'})";
                 }
                 if(stringUrl.indexOf('api-reference') > -1) {
                     var apiLink = url[3].split('#');
@@ -137,7 +137,7 @@ app.get('/api/googledocs/:docID/:token/:chapter', function(req, res) {
                 $(this).attr('href', '#');
             });
 
-            parsedHtml = $.html();
+            parsedHtml = $.html().replace(/&apos;/g, "'");
         }
         request(getGuideTitle, function(error, response, html){
             if(html.error){
