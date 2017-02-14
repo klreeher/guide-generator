@@ -17,7 +17,7 @@ var bodyParser = require('body-parser'), //parses html body
     request = require('request'), //make authenticated http requests
     fs = require('fs'), //internal file system, enables saving files
     cheerio = require('cheerio'), //jquery-like functions to filter response bodies
-    Underscore = require('underscore'),
+    _ = require('underscore'),
     stripBom = require('strip-bom'),
     marked = require('marked'),
     Prism = require('prismjs')
@@ -119,22 +119,29 @@ app.get('/api/googledocs/:docID/:token/:chapter', function(req, res) {
 
                 var url = $(this).attr('href').split('/');
                 var sref;
-                if(stringUrl.indexOf('api-reference') < 0 && stringUrl.indexOf('ordercloud' > -1)){
+
+                //exclude non-guide urls from being converted to state links
+                var whitelist = ['guides', 'platform-guides', 'use-case-guides', 'frameworks-and-sdks', 'integration-services', 'api-reference'];
+                var isGuideUrl = stringUrl.indexOf('ordercloud') > -1 && _.some(whitelist, function(item) { return stringUrl.indexOf(item) > - 1;});
+
+                if( isGuideUrl ) {
+                    if(stringUrl.indexOf('api-reference') < 0 ){
                     var anchorLink = null;
                     if(url[5].indexOf('#') > -1) anchorLink = url[5].split('#');  //determine whether link also includes anchor tag
 
                     if(!anchorLink) sref = url[3] + ".content({sectionID:'" + url[4] + "', guideID:'" + url[5] + "'})"; 
                     if(anchorLink) sref = url[3] + ".content({sectionID:'" + url[4] + "', guideID:'" + anchorLink[0] + "', '#':'" + anchorLink[1] + "'})";
+                    }
+                    if(stringUrl.indexOf('api-reference') > -1) {
+                        var apiLink = url[3].split('#');
+                        if(apiLink[1]) sref = apiLink[0] + "({'#':'" + apiLink[1] + "'})";
+                    }
+                    $(this).attr('ui-sref', sref);
+                    console.log('***************************************************');
+                    console.log('');
+                    console.log('');
+                    $(this).attr('href', '#');
                 }
-                if(stringUrl.indexOf('api-reference') > -1) {
-                    var apiLink = url[3].split('#');
-                    if(apiLink[1]) sref = apiLink[0] + "({'#':'" + apiLink[1] + "'})";
-                }
-                $(this).attr('ui-sref', sref);
-                console.log('***************************************************');
-                console.log('');
-                console.log('');
-                $(this).attr('href', '#');
             });
 
             parsedHtml = $.html().replace(/&apos;/g, "'");
